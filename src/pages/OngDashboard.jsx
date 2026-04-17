@@ -170,80 +170,106 @@ const OngDashboard = () => {
             </div>
           )}
 
-          {activeTab === 'voluntarios' && (
-            <div className="fade-in">
-              <div className="panel-header" style={{ marginBottom: '2rem' }}>
-                <h2 style={{ color: 'var(--navy-blue)' }}>Voluntários por Projeto</h2>
-                <div className="search-bar" style={{ width: '300px', background: 'white' }}>
-                  <Search size={18} />
-                  <input type="text" placeholder="Buscar voluntário..." />
-                </div>
-              </div>
+          {activeTab === 'voluntarios' && (() => {
+            const projects = [
+              {
+                id: 1,
+                title: 'Professor Voluntário de Matemática',
+                category: 'Educação',
+                modality: 'Remoto',
+                location: 'Online (Zoom)',
+                date: '18 Out 2025 — 14:00',
+                volunteerCount: 2,
+                volunteers: [
+                  { name: 'Ana Beatriz', skills: 'Matemática, Didática', status: 'active', statusLabel: 'Ativo', rating: '⭐⭐⭐⭐⭐' },
+                  { name: 'João Pedro', skills: 'Exatas, Comunicação', status: 'pending', statusLabel: 'Pendente', rating: '-' },
+                ]
+              },
+              {
+                id: 2,
+                title: 'Mutirão de Limpeza do Parque',
+                category: 'Meio Ambiente',
+                modality: 'Presencial',
+                location: 'Parque da Cidade — Curitiba, PR',
+                date: '20 Out 2025 — 08:00',
+                volunteerCount: 1,
+                volunteers: [
+                  { name: 'Carlos Silva', skills: 'Logística, Trabalho em equipe', status: 'active', statusLabel: 'Ativo', rating: '⭐⭐⭐⭐' },
+                ]
+              },
+              {
+                id: 3,
+                title: 'Apoio a Idosos no Centro Comunitário',
+                category: 'Saúde',
+                modality: 'Presencial',
+                location: 'Centro Comunitário Vila Nova — Rio de Janeiro, RJ',
+                date: '25 Out 2025 — 09:00',
+                volunteerCount: 3,
+                volunteers: [
+                  { name: 'Maria Luísa', skills: 'Enfermagem, Empatia', status: 'active', statusLabel: 'Ativo', rating: '⭐⭐⭐⭐⭐' },
+                  { name: 'Fernando Souza', skills: 'Fisioterapia', status: 'active', statusLabel: 'Ativo', rating: '⭐⭐⭐⭐' },
+                  { name: 'Larissa Costa', skills: 'Psicologia', status: 'pending', statusLabel: 'Pendente', rating: '-' },
+                ]
+              }
+            ];
 
-              {/* Projeto 1 */}
-              <div className="dash-panel" style={{ marginBottom: '1.5rem' }}>
-                <div className="panel-header" style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>
-                  <h3 style={{ fontSize: '1.1rem' }}>📌 Professor Voluntário de Matemática</h3>
-                  <span className="tag blue">2 Voluntários</span>
+            return (
+              <div className="fade-in">
+                <div className="panel-header" style={{ marginBottom: '2rem', borderBottom: 'none' }}>
+                  <h2 style={{ color: 'var(--navy-blue)' }}>Voluntários por Projeto</h2>
+                  <div className="search-bar" style={{ width: '300px', background: 'white' }}>
+                    <Search size={18} />
+                    <input type="text" placeholder="Buscar voluntário..." />
+                  </div>
                 </div>
-                <table className="volunteers-table">
-                  <thead>
-                    <tr>
-                      <th>Nome</th>
-                      <th>Habilidades</th>
-                      <th>Status</th>
-                      <th>Avaliação</th>
-                      <th>Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Ana Beatriz</td>
-                      <td>Matemática, Didática</td>
-                      <td><span className="status-badge active">Ativo</span></td>
-                      <td>⭐⭐⭐⭐⭐</td>
-                      <td><button className="btn-text">Ver Perfil</button></td>
-                    </tr>
-                    <tr>
-                      <td>João Pedro</td>
-                      <td>Exatas, Comunicação</td>
-                      <td><span className="status-badge pending">Pendente</span></td>
-                      <td>-</td>
-                      <td><button className="btn-text">Analisar</button></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
 
-              {/* Projeto 2 */}
-              <div className="dash-panel">
-                <div className="panel-header" style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>
-                  <h3 style={{ fontSize: '1.1rem' }}>📌 Mutirão de Limpeza do Parque</h3>
-                  <span className="tag gray">1 Voluntário</span>
+                <div className="project-cards-list">
+                  {projects.map(proj => (
+                    <details key={proj.id} className="project-flashcard">
+                      <summary className="flashcard-summary">
+                        <div className="flashcard-left">
+                          <h3>{proj.title}</h3>
+                          <div className="flashcard-meta">
+                            <span className="flashcard-detail">📍 {proj.location}</span>
+                            <span className="flashcard-detail">📅 {proj.date}</span>
+                            <span className="flashcard-detail">💻 {proj.modality}</span>
+                          </div>
+                        </div>
+                        <div className="flashcard-right">
+                          <span className={`tag ${proj.category === 'Educação' ? 'blue' : proj.category === 'Saúde' ? 'green' : 'gray'}`}>{proj.category}</span>
+                          <span className="volunteer-count">{proj.volunteerCount} voluntário{proj.volunteerCount > 1 ? 's' : ''}</span>
+                        </div>
+                      </summary>
+                      <div className="flashcard-body">
+                        <table className="volunteers-table">
+                          <thead>
+                            <tr>
+                              <th>Nome</th>
+                              <th>Habilidades</th>
+                              <th>Status</th>
+                              <th>Avaliação</th>
+                              <th>Ações</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {proj.volunteers.map((vol, i) => (
+                              <tr key={i}>
+                                <td>{vol.name}</td>
+                                <td>{vol.skills}</td>
+                                <td><span className={`status-badge ${vol.status}`}>{vol.statusLabel}</span></td>
+                                <td>{vol.rating}</td>
+                                <td><button className="btn-text">{vol.status === 'pending' ? 'Analisar' : 'Ver Perfil'}</button></td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </details>
+                  ))}
                 </div>
-                <table className="volunteers-table">
-                  <thead>
-                    <tr>
-                      <th>Nome</th>
-                      <th>Habilidades</th>
-                      <th>Status</th>
-                      <th>Avaliação</th>
-                      <th>Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Carlos Silva</td>
-                      <td>Logística, Trabalho em equipe</td>
-                      <td><span className="status-badge active">Ativo</span></td>
-                      <td>⭐⭐⭐⭐</td>
-                      <td><button className="btn-text">Ver Perfil</button></td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {activeTab === 'comunicacao' && (
             <div className="fade-in dash-panel">

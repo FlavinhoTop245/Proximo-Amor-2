@@ -39,6 +39,15 @@ const Login = () => {
           }}>
             Acessar como ONG (Simulação)
           </Link>
+          <Link to="/voluntario/dashboard" className="btn-primary" style={{ 
+            width: '100%', 
+            textAlign: 'center', 
+            background: '#10b981', 
+            boxShadow: 'none',
+            marginTop: '0.75rem'
+          }}>
+            Acessar como Voluntário (Simulação)
+          </Link>
         </form>
         
         <p className="auth-footer">

@@ -8,13 +8,15 @@ import Register from './pages/Register';
 import RegisterOng from './pages/RegisterOng';
 import RegisterVolunteer from './pages/RegisterVolunteer';
 import OngDashboard from './pages/OngDashboard';
+import VolunteerDashboard from './pages/VolunteerDashboard';
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* We exclude the Navbar from the dashboard since the dashboard has its own layout */}
+        {/* We exclude the Navbar from dashboards since they have their own layout */}
         <Route path="/ong/dashboard" element={<OngDashboard />} />
+        <Route path="/voluntario/dashboard" element={<VolunteerDashboard />} />
         
         <Route path="/*" element={
           <>

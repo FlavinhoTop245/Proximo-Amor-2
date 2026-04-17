@@ -24,6 +24,21 @@ const Login = () => {
             <a href="#" className="forgot-password">Esqueceu a senha?</a>
           </div>
           <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '1rem' }}>Entrar</button>
+          
+          <div style={{ margin: '1.5rem 0', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
+            <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>OU TESTE O PAINEL</span>
+            <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
+          </div>
+
+          <Link to="/ong/dashboard" className="btn-primary" style={{ 
+            width: '100%', 
+            textAlign: 'center', 
+            background: 'var(--navy-blue)', 
+            boxShadow: 'none' 
+          }}>
+            Acessar como ONG (Simulação)
+          </Link>
         </form>
         
         <p className="auth-footer">

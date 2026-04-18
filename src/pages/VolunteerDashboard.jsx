@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getMapsUrl, getCalendarUrl } from '../utils';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const VolunteerDashboard = () => {
   const [activeTab, setActiveTab] = useState('descobrir');
@@ -37,6 +38,8 @@ const VolunteerDashboard = () => {
   const [selectedVaga, setSelectedVaga] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(() => document.body.classList.contains('dark-theme'));
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     if (isDarkMode) {
@@ -480,12 +483,12 @@ const VolunteerDashboard = () => {
           {activeTab === 'configuracoes' && (
             <div className="fade-in">
               <div className="dash-panel" style={{ maxWidth: '600px', margin: '0 auto' }}>
-                <h3 className="panel-title" style={{ marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>Preferências do Aplicativo</h3>
+                <h3 className="panel-title" style={{ marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>{t('settings.titleVol')}</h3>
                 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                   <div>
-                    <h4 style={{ fontWeight: 600 }}>Modo Escuro (Dark Mode)</h4>
-                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>Altere a aparência de toda a interface do sistema.</p>
+                    <h4 style={{ fontWeight: 600 }}>{t('settings.darkMode')}</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>{t('settings.darkModeDesc')}</p>
                   </div>
                   <button 
                     onClick={() => setIsDarkMode(!isDarkMode)} 
@@ -515,22 +518,13 @@ const VolunteerDashboard = () => {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                   <div>
-                    <h4 style={{ fontWeight: 600 }}>Tamanho da Fonte</h4>
-                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>Aumentar tamanho do texto visando acessibilidade.</p>
+                    <h4 style={{ fontWeight: 600 }}>{t('settings.language')}</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>{t('settings.languageDesc')}</p>
                   </div>
-                  <select style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--card-bg)', color: 'var(--text-dark)' }}>
-                    <option value="normal">Normal</option>
-                    <option value="large">Grande</option>
-                    <option value="xlarge">Extra Grande</option>
-                  </select>
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                  <div>
-                    <h4 style={{ fontWeight: 600 }}>Idioma do Aplicativo</h4>
-                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>Escolha a linguagem principal da interface.</p>
-                  </div>
-                  <select style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--card-bg)', color: 'var(--text-dark)' }}>
+                  <select 
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--card-bg)', color: 'var(--text-dark)' }}>
                     <option value="pt-br">Português (Brasil)</option>
                     <option value="en">English (US)</option>
                     <option value="es">Español</option>
@@ -539,8 +533,8 @@ const VolunteerDashboard = () => {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                   <div>
-                    <h4 style={{ fontWeight: 600 }}>Economia de Dados (Ocultar Imagens)</h4>
-                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>Oculta imagens de vagas para economizar internet móvel.</p>
+                    <h4 style={{ fontWeight: 600 }}>{t('settings.dataSaver')}</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>{t('settings.dataSaverDesc')}</p>
                   </div>
                   <button 
                     onClick={() => {}} 
@@ -570,8 +564,8 @@ const VolunteerDashboard = () => {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                   <div>
-                    <h4 style={{ fontWeight: 600 }}>Notificações Push</h4>
-                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>Receber alertas sobre vagas urgentes.</p>
+                    <h4 style={{ fontWeight: 600 }}>{t('settings.notifications')}</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>{t('settings.notificationsDesc')}</p>
                   </div>
                   <button 
                     onClick={() => setNotificationsEnabled(!notificationsEnabled)} 
@@ -601,10 +595,10 @@ const VolunteerDashboard = () => {
 
                 <div style={{ borderBottom: '1px solid var(--border-color)', margin: '2rem 0' }}></div>
 
-                <h3 className="panel-title" style={{ marginBottom: '1.5rem' }}>Segurança</h3>
+                <h3 className="panel-title" style={{ marginBottom: '1.5rem' }}>{t('settings.security')}</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <button className="btn-outline" style={{ display: 'block', width: '100%', textAlign: 'left', padding: '1rem' }}>Alterar minha senha atual</button>
-                  <button className="btn-outline" style={{ display: 'block', width: '100%', textAlign: 'left', padding: '1rem', color: '#ef4444', borderColor: '#fee2e2' }}>Desativar minha conta</button>
+                  <button className="btn-outline" style={{ display: 'block', width: '100%', textAlign: 'left', padding: '1rem' }}>{t('settings.changePassword')}</button>
+                  <button className="btn-outline" style={{ display: 'block', width: '100%', textAlign: 'left', padding: '1rem', color: '#ef4444', borderColor: '#fee2e2' }}>{t('settings.deactivateAccount')}</button>
                 </div>
 
               </div>

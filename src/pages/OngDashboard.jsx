@@ -32,6 +32,7 @@ const OngDashboard = () => {
   const [newJobCategory, setNewJobCategory] = useState('Educação');
   const [newJobDate, setNewJobDate] = useState('');
   const [newJobTime, setNewJobTime] = useState('');
+  const [newJobTimeEnd, setNewJobTimeEnd] = useState('');
   const [newJobLocation, setNewJobLocation] = useState('');
   const [newJobDesc, setNewJobDesc] = useState('');
 
@@ -515,7 +516,7 @@ const OngDashboard = () => {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Data</label>
                   <input 
@@ -526,11 +527,20 @@ const OngDashboard = () => {
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Hora</label>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Início</label>
                   <input 
                     type="time" 
                     value={newJobTime}
                     onChange={(e) => setNewJobTime(e.target.value)}
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Término</label>
+                  <input 
+                    type="time" 
+                    value={newJobTimeEnd}
+                    onChange={(e) => setNewJobTimeEnd(e.target.value)}
                     style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none' }}
                   />
                 </div>
@@ -564,7 +574,7 @@ const OngDashboard = () => {
               </div>
 
               <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Descrição do Ato</label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Descrição</label>
                 <textarea 
                   value={newJobDesc}
                   onChange={(e) => setNewJobDesc(e.target.value)}

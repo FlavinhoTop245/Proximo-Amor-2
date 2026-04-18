@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vagas de Voluntariado | Próximo Amor</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
     <header class="header">
@@ -90,7 +90,7 @@
     </footer>
 
     <script type="module">
-        import { jobs } from './data.js';
+        import { jobs } from '/src/data.js';
         
         function renderJobs(jobsList) {
             const container = document.getElementById('jobs-container');
@@ -134,7 +134,7 @@
             renderJobs(filtered);
         });
 
-        // Mobile Menu
+        // Initial render
         renderJobs(jobs);
 
         // Mobile Menu
@@ -146,5 +146,6 @@
             });
         }
     </script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>

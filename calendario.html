@@ -3,42 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendário de Ações | Próximo Amor</title>
-    <link rel="stylesheet" href="/style.css">
-    <style>
-        .calendar-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            background: var(--white);
-            padding: 1rem 2rem;
-            border-radius: var(--r-md);
-            border: 1px solid var(--border);
-        }
-        .event-dot {
-            height: 8px;
-            width: 8px;
-            background: var(--primary-600);
-            border-radius: 50%;
-            display: inline-block;
-            margin-top: 5px;
-        }
-        .calendar-day.today {
-            background: var(--primary-50);
-            border: 2px solid var(--primary-600);
-        }
-        .event-title {
-            font-size: 0.7rem;
-            color: var(--primary-700);
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: block;
-            margin-top: 4px;
-        }
-    </style>
+    <title>Calendário | Próximo Amor</title>
+    <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
     <header class="header">
@@ -66,136 +32,38 @@
         <section class="section">
             <div class="container">
                 <h1 class="mb-8 text-center">Calendário de Atividades</h1>
-                
-                <div class="calendar-nav">
-                    <button class="btn btn-outline btn-sm" id="prev-month">← Anterior</button>
-                    <h2 id="current-month-year">Maio 2024</h2>
-                    <button class="btn btn-outline btn-sm" id="next-month">Próximo →</button>
+                <div class="calendar-header grid grid-cols-7" style="background: var(--primary-600); color: white; padding: 1rem; text-align: center; border-radius: var(--r-md) var(--r-md) 0 0;">
+                    <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
                 </div>
-
-                <div class="calendar-header grid grid-cols-7">
-                    <div>Dom</div>
-                    <div>Seg</div>
-                    <div>Ter</div>
-                    <div>Qua</div>
-                    <div>Qui</div>
-                    <div>Sex</div>
-                    <div>Sáb</div>
-                </div>
-                <div class="calendar-grid" id="calendar-grid">
-                    <!-- Days will be injected by JS -->
-                </div>
-
-                <div class="card mt-8">
-                    <h3 class="mb-4">Legenda</h3>
-                    <div class="flex gap-8">
-                        <div class="flex items-center gap-2">
-                            <span class="event-dot"></span>
-                            <span>Ação Voluntária Marcada</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span style="height: 15px; width: 15px; background: var(--primary-50); border: 1px solid var(--primary-600); display: inline-block;"></span>
-                            <span>Dia Atual</span>
-                        </div>
-                    </div>
+                <div class="calendar-grid" id="calendar-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 0 0 var(--r-md) var(--r-md); overflow: hidden;">
+                    <!-- Days injected by JS -->
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="footer">
-        <div class="container text-center" style="color: var(--text-light); font-size: 0.9rem;">
-            <p>&copy; 2024 Próximo Amor. Todos os direitos reservados.</p>
-        </div>
-    </footer>
-
     <script type="module">
-        import { jobs } from './data.js';
+        import { jobs } from '/src/data.js';
+        const grid = document.getElementById('calendar-grid');
+        const year = 2024, month = 4; // May
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-        const monthYearElement = document.getElementById('current-month-year');
-        const calendarGrid = document.getElementById('calendar-grid');
-        
-        // Mock current date as May 2024 for demo purposes
-        let currentYear = 2024;
-        let currentMonth = 4; // May (0-indexed)
-
-        const months = [
-            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-        ];
-
-        function renderCalendar(year, month) {
-            monthYearElement.innerText = `${months[month]} ${year}`;
-            calendarGrid.innerHTML = '';
-
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            // Padding for first day
-            for (let i = 0; i < firstDay; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'calendar-day';
-                emptyDay.style.background = 'var(--bg-main)';
-                calendarGrid.appendChild(emptyDay);
-            }
-
-            // Days of the month
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                dayElement.innerHTML = `<strong>${day}</strong>`;
-                
-                // Check for events on this day
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const dayJobs = jobs.filter(j => j.date === dateStr);
-                
-                if (dayJobs.length > 0) {
-                    dayJobs.forEach(job => {
-                        const eventEl = document.createElement('span');
-                        eventEl.className = 'event-title';
-                        eventEl.innerText = `🔹 ${job.title}`;
-                        eventEl.title = job.description;
-                        dayElement.appendChild(eventEl);
-                    });
-                }
-
-                // Mark today (mocked)
-                if (day === 18 && month === 4 && year === 2024) {
-                    dayElement.classList.add('today');
-                }
-
-                calendarGrid.appendChild(dayElement);
-            }
+        for (let i = 0; i < firstDay; i++) {
+            grid.innerHTML += `<div class="calendar-day" style="background: var(--bg-main); min-height: 120px;"></div>`;
         }
 
-        document.getElementById('prev-month').addEventListener('click', () => {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            renderCalendar(currentYear, currentMonth);
-        });
-
-        document.getElementById('next-month').addEventListener('click', () => {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            renderCalendar(currentYear, currentMonth);
-        });
-
-        renderCalendar(currentYear, currentMonth);
-
-        // Mobile Menu
-        const toggle = document.getElementById('menu-toggle');
-        const menu = document.getElementById('nav-menu');
-        if (toggle && menu) {
-            toggle.addEventListener('click', () => {
-                menu.classList.toggle('active');
-            });
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const dayJobs = jobs.filter(j => j.date === dateStr);
+            grid.innerHTML += `
+                <div class="calendar-day" style="background: white; min-height: 120px; padding: 0.5rem; border: 1px solid var(--border);">
+                    <strong>${day}</strong>
+                    ${dayJobs.map(j => `<div style="font-size: 0.7rem; color: var(--primary-700); margin-top: 4px;">🔹 ${j.title}</div>`).join('')}
+                </div>
+            `;
         }
     </script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Search, ArrowRight, X, Calendar, ExternalLink } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 import { getMapsUrl, getCalendarUrl } from '../utils';
 
 const Home = () => {
   const location = useLocation();
+  const { t } = useLanguage();
   const [selectedVaga, setSelectedVaga] = useState(null);
 
   useEffect(() => {
@@ -61,13 +63,13 @@ const Home = () => {
         <img src="/hero_background_1776454304976.png" alt="Voluntários" className="hero-bg" />
         <div className="hero-overlay"></div>
         <div className="hero-content">
-          <h1 className="hero-title">Faça a diferença na vida de alguém hoje</h1>
-          <p className="hero-subtitle">Conectamos corações dispostos a ajudar com causas que transformam o mundo. Encontre a oportunidade perfeita para o seu talento.</p>
+          <h1 className="hero-title">{t('home.hero.title')}</h1>
+          <p className="hero-subtitle">{t('home.hero.subtitle')}</p>
           <div className="hero-search">
-            <input type="text" placeholder="Buscar por causa, habilidade ou cidade..." />
+            <input type="text" placeholder={t('home.hero.searchPlaceholder')} />
             <button className="btn-search">
               <Search size={20} />
-              Buscar
+              {t('home.hero.searchBtn')}
             </button>
           </div>
         </div>
@@ -76,11 +78,11 @@ const Home = () => {
       <section id="vagas" className="opportunities">
         <div className="section-header">
           <div>
-            <h2 className="section-title">Vagas de Voluntário</h2>
-            <p className="section-subtitle">Encontre a causa que mais combina com você</p>
+            <h2 className="section-title">{t('home.opps.title')}</h2>
+            <p className="section-subtitle">{t('home.opps.subtitle')}</p>
           </div>
           <button className="view-all" style={{background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem'}}>
-            Ver todas as vagas
+            {t('home.opps.viewAll')}
             <ArrowRight size={20} />
           </button>
         </div>
@@ -103,7 +105,7 @@ const Home = () => {
                     <div className="org-avatar">{opp.org.charAt(0)}</div>
                     {opp.org}
                   </div>
-                  <button className="btn-card">Detalhes</button>
+                  <button className="btn-card">{t('volApp.detailsBtn')}</button>
                 </div>
               </div>
             </div>
@@ -126,7 +128,7 @@ const Home = () => {
             </div>
             <div className="modal-body">
               <div className="modal-desc">
-                <h3>Sobre a vaga</h3>
+                <h3>{t('home.modal.about')}</h3>
                 <p>{selectedVaga.description}</p>
               </div>
               
@@ -134,7 +136,7 @@ const Home = () => {
                 <div className="modal-detail-item">
                   <div className="detail-icon"><Calendar size={20} /></div>
                   <div>
-                    <h4>Quando</h4>
+                    <h4>{t('home.modal.when')}</h4>
                     <p>{selectedVaga.fullDate}</p>
                     {selectedVaga.date && (
                       <a 
@@ -149,7 +151,7 @@ const Home = () => {
                         rel="noopener noreferrer"
                         className="detail-link"
                       >
-                        <ExternalLink size={14} /> Salvar na Agenda
+                        <ExternalLink size={14} /> {t('home.modal.saveCalendar')}
                       </a>
                     )}
                   </div>
@@ -158,7 +160,7 @@ const Home = () => {
                 <div className="modal-detail-item">
                   <div className="detail-icon"><MapPin size={20} /></div>
                   <div>
-                    <h4>Onde</h4>
+                    <h4>{t('home.modal.where')}</h4>
                     <p>{selectedVaga.location}</p>
                     <a 
                       href={getMapsUrl(selectedVaga.location)}
@@ -166,15 +168,15 @@ const Home = () => {
                       rel="noopener noreferrer"
                       className="detail-link"
                     >
-                      <ExternalLink size={14} /> Abrir no GPS
+                      <ExternalLink size={14} /> {t('home.modal.openGps')}
                     </a>
                   </div>
                 </div>
               </div>
             </div>
             <div className="modal-footer">
-              <button className="btn-outline" style={{ flex: 1 }} onClick={() => setSelectedVaga(null)}>Voltar</button>
-              <button className="btn-primary" style={{ flex: 2 }}>Quero me candidatar</button>
+              <button className="btn-outline" style={{ flex: 1 }} onClick={() => setSelectedVaga(null)}>{t('home.modal.back')}</button>
+              <button className="btn-primary" style={{ flex: 2 }}>{t('home.modal.apply')}</button>
             </div>
           </div>
         </div>

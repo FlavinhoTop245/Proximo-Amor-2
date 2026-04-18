@@ -82,6 +82,28 @@ const translations = {
       security: 'Segurança & Acesso',
       changePassword: 'Alterar minha senha atual',
       deactivateAccount: 'Desativar minha conta',
+    },
+    home: {
+      hero: {
+        title: 'Faça a diferença na vida de alguém hoje',
+        subtitle: 'Conectamos corações dispostos a ajudar com causas que transformam o mundo. Encontre a oportunidade perfeita para o seu talento.',
+        searchPlaceholder: 'Buscar por causa, habilidade ou cidade...',
+        searchBtn: 'Buscar'
+      },
+      opps: {
+        title: 'Vagas de Voluntário',
+        subtitle: 'Encontre a causa que mais combina com você',
+        viewAll: 'Ver todas as vagas'
+      },
+      modal: {
+        about: 'Sobre a vaga',
+        when: 'Quando',
+        where: 'Onde',
+        saveCalendar: 'Salvar na Agenda',
+        openGps: 'Abrir no GPS',
+        back: 'Voltar',
+        apply: 'Quiero me candidatar'
+      }
     }
   },
   'en': {
@@ -94,7 +116,29 @@ const translations = {
     ongApp: { overview: 'Overview', jobs: 'Job Management', volunteers: 'Volunteer CRM', comms: 'Communication', reports: 'Reports & Impact', settingsTitle: 'System Settings' },
     ongContent: { stats: 'Overview Stats', activeJobs: 'Active Jobs', totalVols: 'Volunteers', hours: 'Donated Hours', impact: 'Estimated Impact', manageRoles: 'Ongoing Roles', addRole: 'New Role', manageVols: 'Our Volunteers', searchVol: 'Search volunteer...', reportsAndCerts: 'Reports and Certificates' },
     chat: { title: 'Messages', searchHolder: 'Search conversations...', empty: 'Select a conversation to start', write: 'Write a message...' },
-    settings: { titleVol: 'Application Preferences', titleOng: 'Organization Preferences', darkMode: 'Dark Mode', darkModeDesc: 'Change the appearance of the entire interface.', language: 'Application Language', languageDesc: 'Choose the main language of the interface.', notifications: 'Push Notifications', notificationsDesc: 'Receive real-time alerts.', dataSaver: 'Data Saver', dataSaverDesc: 'Hides images to save mobile data.', security: 'Security & Access', changePassword: 'Change my current password', deactivateAccount: 'Deactivate my account', }
+    settings: { titleVol: 'Application Preferences', titleOng: 'Organization Preferences', darkMode: 'Dark Mode', darkModeDesc: 'Change the appearance of the entire interface.', language: 'Application Language', languageDesc: 'Choose the main language of the interface.', notifications: 'Push Notifications', notificationsDesc: 'Receive real-time alerts.', dataSaver: 'Data Saver', dataSaverDesc: 'Hides images to save mobile data.', security: 'Security & Access', changePassword: 'Change my current password', deactivateAccount: 'Deactivate my account', },
+    home: {
+      hero: {
+        title: 'Make a difference in someone\'s life today',
+        subtitle: 'We connect hearts willing to help with causes that transform the world. Find the perfect opportunity for your talent.',
+        searchPlaceholder: 'Search by cause, skill or city...',
+        searchBtn: 'Search'
+      },
+      opps: {
+        title: 'Volunteer Opportunities',
+        subtitle: 'Find the cause that best suits you',
+        viewAll: 'View all opportunities'
+      },
+      modal: {
+        about: 'About this role',
+        when: 'When',
+        where: 'Where',
+        saveCalendar: 'Save to Calendar',
+        openGps: 'Open in GPS',
+        back: 'Back',
+        apply: 'I want to apply'
+      }
+    }
   },
   'es': {
     publicNav: { about: 'Sobre Nosotros', jobs: 'Oportunidades', login: 'Iniciar sesión', register: 'Registrarse', registerOng: 'Registro de ONGs', registerVol: 'Registro de Voluntarios' },

@@ -22,24 +22,86 @@ import {
   Flame,
   Shield,
   Sparkles,
-  Users
+  Users,
+  Calendar,
+  ExternalLink,
+  X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getMapsUrl, getCalendarUrl } from '../utils';
 
 const VolunteerDashboard = () => {
   const [activeTab, setActiveTab] = useState('descobrir');
   const [activeFilter, setActiveFilter] = useState('todos');
   const [savedVagas, setSavedVagas] = useState([]);
+  const [selectedVaga, setSelectedVaga] = useState(null);
 
-  const toggleSave = (id) => {
+  const toggleSave = (e, id) => {
+    e.stopPropagation();
     setSavedVagas(prev => prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]);
   };
 
   const allVagas = [
-    { id: 1, title: 'Professor de Reforço Escolar', org: 'Educa Jovem', location: 'São Paulo, SP', category: 'Educação', modality: 'Presencial', duration: 'Longa', urgent: false, image: '/volunteer_education_1776454318563.png' },
-    { id: 2, title: 'Cuidador de Animais Resgatados', org: 'Patas Amigas', location: 'Online', category: 'Animais', modality: 'Remoto', duration: 'Curta', urgent: true, image: '/volunteer_health_1776454343716.png' },
-    { id: 3, title: 'Plantio de Árvores no Parque', org: 'Verde Viver', location: 'Curitiba, PR', category: 'Meio Ambiente', modality: 'Presencial', duration: 'Curta', urgent: false, image: '/volunteer_environment_1776454330833.png' },
-    { id: 4, title: 'Designer para Campanha Social', org: 'Instituto Sol', location: 'Online', category: 'Educação', modality: 'Remoto', duration: 'Curta', urgent: true, image: '/volunteer_education_1776454318563.png' },
+    { 
+      id: 1, 
+      title: 'Professor de Reforço Escolar', 
+      org: 'Educa Jovem', 
+      location: 'Rua das Flores, 123, São Paulo, SP', 
+      category: 'Educação', 
+      modality: 'Presencial', 
+      duration: 'Longa', 
+      urgent: false, 
+      image: '/volunteer_education_1776454318563.png',
+      description: 'Ajude crianças do ensino fundamental com dificuldades em matemática e português. O projeto visa reduzir a evasão escolar e fortalecer a base educacional da comunidade.',
+      date: '20260425T140000Z',
+      endDate: '20260425T170000Z',
+      fullDate: 'Sábado, 25 de Abril — 14h às 17h'
+    },
+    { 
+      id: 2, 
+      title: 'Cuidador de Animais Resgatados', 
+      org: 'Patas Amigas', 
+      location: 'Av. Paulista, 1000, São Paulo, SP', 
+      category: 'Animais', 
+      modality: 'Presencial', 
+      duration: 'Curta', 
+      urgent: true, 
+      image: '/volunteer_health_1776454343716.png',
+      description: 'Nossa ONG precisa de ajuda para cuidar dos animais resgatados. Você irá alimentar, dar banho e passear com os cães e gatos que aguardam por um novo lar.',
+      date: '20260420T090000Z',
+      endDate: '20260420T120000Z',
+      fullDate: 'Segunda-feira, 20 de Abril — 09h às 12h'
+    },
+    { 
+      id: 3, 
+      title: 'Plantio de Árvores no Parque', 
+      org: 'Verde Viver', 
+      location: 'Parque Barigui, Curitiba, PR', 
+      category: 'Meio Ambiente', 
+      modality: 'Presencial', 
+      duration: 'Curta', 
+      urgent: false, 
+      image: '/volunteer_environment_1776454330833.png',
+      description: 'Participe do nosso mutirão mensal de plantio de árvores nativas. É uma ótima oportunidade de contato com a natureza e de fazer algo prático pelo planeta.',
+      date: '20260510T080000Z',
+      endDate: '20260510T110000Z',
+      fullDate: 'Domingo, 10 de Maio — 08h às 11h'
+    },
+    { 
+      id: 4, 
+      title: 'Designer para Campanha Social', 
+      org: 'Instituto Sol', 
+      location: 'Remoto (Plataforma Próximo Amor)', 
+      category: 'Comunicação', 
+      modality: 'Remoto', 
+      duration: 'Curta', 
+      urgent: true, 
+      image: '/volunteer_education_1776454318563.png',
+      description: 'Estamos reformulando nossa identidade visual e precisamos de um designer para criar os posts de uma campanha de arrecadação de alimentos.',
+      date: '20260415T100000Z',
+      endDate: '20260430T180000Z',
+      fullDate: 'Início: 15 de Abril (Flexível)'
+    },
   ];
 
   const filteredVagas = allVagas.filter(v => {
@@ -134,11 +196,11 @@ const VolunteerDashboard = () => {
                   </div>
                 )}
                 {filteredVagas.map(vaga => (
-                  <div key={vaga.id} className="vol-vaga-card">
+                  <div key={vaga.id} className="vol-vaga-card" onClick={() => setSelectedVaga(vaga)}>
                     <div className="vol-vaga-img">
                       <img src={vaga.image} alt={vaga.title} />
                       {vaga.urgent && <span className="urgent-badge"><Zap size={12} /> Urgente</span>}
-                      <button className="save-btn" onClick={() => toggleSave(vaga.id)}>
+                      <button className="save-btn" onClick={(e) => toggleSave(e, vaga.id)}>
                         {savedVagas.includes(vaga.id) ? <BookmarkCheck size={20} /> : <Bookmark size={20} />}
                       </button>
                     </div>
@@ -150,8 +212,8 @@ const VolunteerDashboard = () => {
                       <h3>{vaga.title}</h3>
                       <p className="vol-vaga-org">{vaga.org}</p>
                       <div className="vol-vaga-footer">
-                        <span><MapPin size={14} /> {vaga.location}</span>
-                        <button className="btn-primary" style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}>Inscrever-se</button>
+                        <span><MapPin size={14} /> {vaga.location.length > 25 ? vaga.location.substring(0, 25) + '...' : vaga.location}</span>
+                        <button className="btn-primary" style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}>Detalhes</button>
                       </div>
                     </div>
                   </div>
@@ -317,12 +379,12 @@ const VolunteerDashboard = () => {
                 ) : (
                   <ul className="wishlist">
                     {allVagas.filter(v => savedVagas.includes(v.id)).map(v => (
-                      <li key={v.id} className="wishlist-item">
+                      <li key={v.id} className="wishlist-item" onClick={() => setSelectedVaga(v)}>
                         <div>
                           <strong>{v.title}</strong>
-                          <span className="wishlist-org">{v.org} — {v.location}</span>
+                          <span className="wishlist-org">{v.org} — {v.location.substring(0, 30)}...</span>
                         </div>
-                        <button className="btn-primary" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }}>Inscrever-se</button>
+                        <button className="btn-primary" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }}>Detalhes</button>
                       </li>
                     ))}
                   </ul>
@@ -420,6 +482,77 @@ const VolunteerDashboard = () => {
           <span>Perfil</span>
         </button>
       </nav>
+
+      {/* ===================== MODAL DE DETALHES ===================== */}
+      {selectedVaga && (
+        <div className="modal-overlay" onClick={() => setSelectedVaga(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setSelectedVaga(null)}><X size={24} /></button>
+            <div className="modal-header">
+              <img src={selectedVaga.image} alt={selectedVaga.title} className="modal-hero-img" />
+              <div className="modal-title-area">
+                <span className="tag blue">{selectedVaga.category}</span>
+                <h2>{selectedVaga.title}</h2>
+                <p className="modal-org-name">{selectedVaga.org}</p>
+              </div>
+            </div>
+            <div className="modal-body">
+              <div className="modal-desc">
+                <h3>Sobre a vaga</h3>
+                <p>{selectedVaga.description}</p>
+              </div>
+              
+              <div className="modal-details-grid">
+                <div className="modal-detail-item">
+                  <div className="detail-icon"><Calendar size={20} /></div>
+                  <div>
+                    <h4>Quando</h4>
+                    <p>{selectedVaga.fullDate}</p>
+                    {selectedVaga.date && (
+                      <a 
+                        href={getCalendarUrl({
+                          title: selectedVaga.title,
+                          description: selectedVaga.description,
+                          location: selectedVaga.location,
+                          startDate: selectedVaga.date,
+                          endDate: selectedVaga.endDate || selectedVaga.date
+                        })}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="detail-link"
+                      >
+                        <ExternalLink size={14} /> Salvar na Agenda
+                      </a>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="modal-detail-item">
+                  <div className="detail-icon"><MapPin size={20} /></div>
+                  <div>
+                    <h4>Onde</h4>
+                    <p>{selectedVaga.location}</p>
+                    {selectedVaga.modality !== 'Remoto' && (
+                      <a 
+                        href={getMapsUrl(selectedVaga.location)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="detail-link"
+                      >
+                        <ExternalLink size={14} /> Abrir no GPS
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn-outline" style={{ flex: 1 }} onClick={() => setSelectedVaga(null)}>Voltar</button>
+              <button className="btn-primary" style={{ flex: 2 }}>Quero me candidatar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

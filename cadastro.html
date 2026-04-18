@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro | Próximo Amor</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body style="background: var(--bg-main);">
+    <div class="container">
+        <div class="form-container" style="max-width: 500px;">
+            <div class="text-center mb-8">
+                <a href="/" class="logo justify-center mb-4">
+                    <span class="logo-icon">💙</span>
+                    <span>Próximo Amor</span>
+                </a>
+                <h2 class="mb-2">Crie sua conta</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Junte-se à maior rede de solidariedade.</p>
+            </div>
+
+            <form id="register-form">
+                <div class="form-group">
+                    <label class="form-label" for="name">Nome Completo</label>
+                    <input type="text" id="name" class="form-input" placeholder="João Silva" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">E-mail</label>
+                    <input type="email" id="email" class="form-input" placeholder="seu@email.com" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="form-group">
+                        <label class="form-label" for="password">Senha</label>
+                        <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="confirm-password">Confirmar</label>
+                        <input type="password" id="confirm-password" class="form-input" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Interesses de Voluntariado</label>
+                    <div class="grid grid-cols-2 gap-2" style="font-size: 0.85rem;">
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" name="interest" value="Educação"> Educação
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" name="interest" value="Animais"> Animais
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" name="interest" value="Meio Ambiente"> Meio Ambiente
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" name="interest" value="Saúde"> Saúde
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full mb-4">Criar Conta</button>
+            </form>
+
+            <div class="text-center">
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Já tem uma conta? <a href="/login.html" style="color: var(--primary-600); font-weight: 600;">Entrar</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        document.getElementById('register-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm-password').value;
+
+            if (password !== confirm) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+
+            // Simple mock registration
+            alert('Cadastro realizado com sucesso! Bem-vindo à nossa comunidade.');
+            localStorage.setItem('user_logged', 'true');
+            window.location.href = '/';
+        });
+    </script>
+</body>
+</html>

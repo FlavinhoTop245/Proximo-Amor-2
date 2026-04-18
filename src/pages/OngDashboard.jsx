@@ -31,9 +31,34 @@ const OngDashboard = () => {
   const [newJobTitle, setNewJobTitle] = useState('');
   const [newJobCategory, setNewJobCategory] = useState('Educação');
   const [newJobType, setNewJobType] = useState('Remoto');
+  const [newJobDate, setNewJobDate] = useState('');
+  const [newJobTime, setNewJobTime] = useState('');
+  const [newJobLocation, setNewJobLocation] = useState('');
+  const [generatedLink, setGeneratedLink] = useState('');
+
   const [myRoles, setMyRoles] = useState([
     { id: 1, title: 'Professor Voluntário de Matemática', category: 'Educação', type: 'Remoto', subscribers: 12, exp: '5 dias' }
   ]);
+
+  const handleLocationBlur = async (e) => {
+    const cepOnlyNumbers = e.target.value.replace(/\D/g, '');
+    if (cepOnlyNumbers.length === 8) {
+      const textoOriginal = e.target.value;
+      setNewJobLocation("Buscando endereço...");
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cepOnlyNumbers}/json/`);
+        const data = await response.json();
+        if (!data.erro) {
+          setNewJobLocation(`${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`);
+        } else {
+          setNewJobLocation(textoOriginal);
+          alert("CEP não encontrado.");
+        }
+      } catch (error) {
+        setNewJobLocation(textoOriginal);
+      }
+    }
+  };
 
   const { language, setLanguage, t } = useLanguage();
 
@@ -474,68 +499,157 @@ const OngDashboard = () => {
       {/* JOB CREATION MODAL */}
       {isCreatingJob && (
         <div className="modal-backdrop" onClick={() => setIsCreatingJob(false)}>
-          <div className="modal-content fade-in" style={{ maxWidth: '450px' }} onClick={e => e.stopPropagation()}>
+          <div className="modal-content fade-in" style={{ maxWidth: '450px', maxHeight: '90vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Criar Nova Vaga</h2>
               <button className="btn-close" onClick={() => setIsCreatingJob(false)}><X size={24} /></button>
             </div>
             <div style={{ padding: '1.5rem 2rem' }}>
               <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Título da Vaga / Função</label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Título da Vaga</label>
                 <input 
                   type="text" 
                   value={newJobTitle}
                   onChange={(e) => setNewJobTitle(e.target.value)}
-                  placeholder="Ex: Designer Voluntário, Dentista..."
+                  placeholder="Ex: Reforço de Matemática"
                   style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none' }}
                 />
               </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Data</label>
+                  <input 
+                    type="date" 
+                    value={newJobDate}
+                    onChange={(e) => setNewJobDate(e.target.value)}
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Hora</label>
+                  <input 
+                    type="time" 
+                    value={newJobTime}
+                    onChange={(e) => setNewJobTime(e.target.value)}
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none' }}
+                  />
+                </div>
+              </div>
+
               <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Causa (Categoria principal)</label>
-                <select 
-                  value={newJobCategory}
-                  onChange={(e) => setNewJobCategory(e.target.value)}
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Localização (Digite o CEP ou endereço)</label>
+                <input 
+                  type="text" 
+                  value={newJobLocation}
+                  onChange={(e) => setNewJobLocation(e.target.value)}
+                  onBlur={handleLocationBlur}
+                  placeholder="Digite o CEP com formato 00000000"
                   style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none' }}
-                >
-                  <option value="Educação">Educação</option>
-                  <option value="Saúde">Saúde</option>
-                  <option value="Meio Ambiente">Meio Ambiente</option>
-                  <option value="Animais">Animais</option>
-                  <option value="Tecnologia">Tecnologia e Design</option>
-                </select>
+                />
               </div>
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Modalidade</label>
-                <select 
-                  value={newJobType}
-                  onChange={(e) => setNewJobType(e.target.value)}
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none' }}
-                >
-                  <option value="Remoto">Remoto (Online)</option>
-                  <option value="Presencial">Presencial (Endereço da ONG)</option>
-                  <option value="Híbrido">Híbrido</option>
-                </select>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Causa</label>
+                  <select 
+                    value={newJobCategory}
+                    onChange={(e) => setNewJobCategory(e.target.value)}
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none' }}
+                  >
+                    <option value="Educação">Educação</option>
+                    <option value="Saúde">Saúde</option>
+                    <option value="Meio Ambiente">Meio Ambiente</option>
+                    <option value="Animais">Animais</option>
+                    <option value="Tecnologia">Tecnologia</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Modalidade</label>
+                  <select 
+                    value={newJobType}
+                    onChange={(e) => setNewJobType(e.target.value)}
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none' }}
+                  >
+                    <option value="Remoto">Remoto</option>
+                    <option value="Presencial">Presencial</option>
+                    <option value="Híbrido">Híbrido</option>
+                  </select>
+                </div>
               </div>
-              <button 
-                className="btn-primary" 
-                style={{ width: '100%', padding: '1rem' }}
-                onClick={() => {
-                  if(!newJobTitle.trim()) return;
-                  const newRole = {
-                    id: Date.now(),
-                    title: newJobTitle,
-                    category: newJobCategory,
-                    type: newJobType,
-                    subscribers: 0,
-                    exp: '30 dias'
-                  };
-                  setMyRoles([newRole, ...myRoles]);
-                  setNewJobTitle('');
-                  setIsCreatingJob(false);
-                }}
-              >
-                Publicar Vaga
-              </button>
+
+              {generatedLink ? (
+                <div style={{ marginBottom: '1.5rem', padding: '1rem', background: 'var(--dashboard-bg)', borderRadius: '8px', border: '1px solid var(--azure-blue)' }}>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--navy-blue)', fontWeight: 'bold', marginBottom: '0.5rem' }}>Link Compartilhável Gerado!</p>
+                  <input 
+                    type="text" 
+                    readOnly 
+                    value={generatedLink}
+                    style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc', marginBottom: '0.5rem', fontSize: '0.8rem' }}
+                  />
+                  <button 
+                    className="btn-outline" 
+                    style={{ width: '100%', fontSize: '0.85rem', padding: '0.5rem' }}
+                    onClick={() => {
+                      navigator.clipboard.writeText(generatedLink);
+                      alert('Link copiado para a área de transferência!');
+                    }}
+                  >
+                    Copiar Link
+                  </button>
+                </div>
+              ) : (
+                <button 
+                  className="btn-primary" 
+                  style={{ width: '100%', padding: '1rem' }}
+                  onClick={() => {
+                    if(!newJobTitle.trim()) {
+                      alert("Preencha o título da vaga.");
+                      return;
+                    }
+                    // Gera a nova vaga no painel (mock)
+                    const newRole = {
+                      id: Date.now(),
+                      title: newJobTitle,
+                      category: newJobCategory,
+                      type: newJobType,
+                      subscribers: 0,
+                      exp: '30 dias'
+                    };
+                    setMyRoles([newRole, ...myRoles]);
+                    
+                    // Gera o Link Paramétrico Global para a plataforma de GPS/Calendario do Voluntário
+                    const baseUrl = 'https://carlos2511760-blip.github.io/Gps-e-calendario/';
+                    const params = new URLSearchParams({
+                      title: newJobTitle,
+                      date: newJobDate || 'A definir',
+                      time: newJobTime || 'A definir',
+                      location: newJobLocation || newJobType,
+                      details: `Causa: ${newJobCategory} | Vaga gerada pelo painel Próximo Amor O.N.G.`
+                    });
+                    setGeneratedLink(`${baseUrl}?${params.toString()}`);
+                  }}
+                >
+                  Gerar Link e Publicar
+                </button>
+              )}
+
+              {generatedLink && (
+                 <button 
+                 className="btn-text" 
+                 style={{ width: '100%', marginTop: '0.5rem', padding: '0.5rem' }}
+                 onClick={() => {
+                   setNewJobTitle('');
+                   setNewJobDate('');
+                   setNewJobTime('');
+                   setNewJobLocation('');
+                   setGeneratedLink('');
+                   setIsCreatingJob(false);
+                 }}
+               >
+                 Fechar e Voltar ao Painel
+               </button>
+              )}
             </div>
           </div>
         </div>

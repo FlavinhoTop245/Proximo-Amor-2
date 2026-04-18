@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Próximo Amor</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body style="background: var(--bg-main);">
+    <div class="container">
+        <div class="form-container">
+            <div class="text-center mb-8">
+                <a href="/" class="logo justify-center mb-4">
+                    <span class="logo-icon">💙</span>
+                    <span>Próximo Amor</span>
+                </a>
+                <h2 class="mb-2">Bem-vindo de volta</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Acesse sua conta para gerenciar suas ações.</p>
+            </div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="email">E-mail</label>
+                    <input type="email" id="email" class="form-input" placeholder="seu@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="form-label" for="password" style="margin-bottom: 0;">Senha</label>
+                        <a href="#" style="font-size: 0.8rem; color: var(--primary-600);">Esqueceu a senha?</a>
+                    </div>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full mb-4">Entrar</button>
+            </form>
+
+            <div class="text-center">
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Não tem uma conta? <a href="/cadastro.html" style="color: var(--primary-600); font-weight: 600;">Cadastre-se</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Simple mock login
+            if (email && password) {
+                // Show success message (simplified)
+                alert('Login realizado com sucesso! Bem-vindo de volta.');
+                localStorage.setItem('user_logged', 'true');
+                window.location.href = '/';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,13 +1,148 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>proximo-amor-app</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Próximo Amor | Conectando Corações e Causas</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container flex justify-between items-center">
+            <a href="/" class="logo">
+                <span class="logo-icon">💙</span>
+                <span>Próximo Amor</span>
+            </a>
+            
+            <nav class="nav" id="nav-menu">
+                <ul>
+                    <li><a href="/" class="active">Home</a></li>
+                    <li><a href="/vagas.html">Vagas</a></li>
+                    <li><a href="/sobre.html">Sobre Nós</a></li>
+                    <li><a href="/calendario.html">Calendário</a></li>
+                    <li><a href="/mapa.html">Mapa</a></li>
+                    <li><a href="/login.html" class="btn btn-outline btn-sm">Login</a></li>
+                    <li><a href="/cadastro.html" class="btn btn-primary btn-sm">Seja Voluntário</a></li>
+                </ul>
+            </nav>
+            
+            <button class="menu-toggle" id="menu-toggle">☰</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero section reveal">
+            <div class="container grid grid-cols-2 items-center gap-8">
+                <div class="hero-content">
+                    <div class="badge badge-primary mb-4">Plataforma de Impacto Social</div>
+                    <h1>Espalhe amor através do <span style="color: var(--primary-600);">Voluntariado</span></h1>
+                    <p>
+                        Conectamos pessoas dispostas a ajudar com causas que precisam de apoio. Encontre sua próxima oportunidade de transformar vidas hoje mesmo.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="/vagas.html" class="btn btn-primary">Explorar Vagas</a>
+                        <a href="/sobre.html" class="btn btn-outline">Conhecer Projeto</a>
+                    </div>
+                </div>
+                <div class="hero-image" style="background: linear-gradient(135deg, var(--primary-100), #bfdbfe); height: 400px; border-radius: var(--r-lg); display: flex; align-items: center; justify-content: center; font-size: 5rem; box-shadow: var(--shadow-xl);">
+                    🤝
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="section reveal" style="background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+            <div class="container grid grid-cols-3 gap-8">
+                <div class="stats-card">
+                    <h2>1.2k+</h2>
+                    <p style="color: var(--text-muted); font-weight: 500;">Voluntários Ativos</p>
+                </div>
+                <div class="stats-card">
+                    <h2>450+</h2>
+                    <p style="color: var(--text-muted); font-weight: 500;">Instituições Parceiras</p>
+                </div>
+                <div class="stats-card">
+                    <h2>15k+</h2>
+                    <p style="color: var(--text-muted); font-weight: 500;">Vidas Impactadas</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Jobs Section -->
+        <section class="section reveal">
+            <div class="container">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h2 class="mb-4">Oportunidades em Destaque</h2>
+                        <p style="color: var(--text-muted);">Encontre uma causa que ressoe com seu coração.</p>
+                    </div>
+                    <a href="/vagas.html" class="btn btn-outline btn-sm">Ver todas as vagas →</a>
+                </div>
+                <div class="grid grid-cols-3 gap-8" id="recent-jobs-container">
+                    <!-- Cards will be injected by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="section reveal" style="background: linear-gradient(rgba(37, 99, 235, 0.05), rgba(37, 99, 235, 0.05));">
+            <div class="container text-center">
+                <h2 class="mb-4">Pronto para fazer a diferença?</h2>
+                <p class="mb-8" style="max-width: 600px; margin-left: auto; margin-right: auto;">
+                    O seu tempo é o presente mais valioso que você pode dar. Junte-se a milhares de voluntários e comece sua jornada agora.
+                </p>
+                <a href="/cadastro.html" class="btn btn-primary">Cadastre-se Grátis</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="grid grid-cols-4 gap-8 mb-8">
+                <div>
+                    <a href="/" class="logo mb-4" style="color: var(--white);">
+                        <span>💙 Próximo Amor</span>
+                    </a>
+                    <p style="color: var(--text-light); font-size: 0.9rem;">
+                        Uma plataforma dedicada a unir pessoas e causas, criando uma rede de solidariedade e impacto positivo em todo o Brasil.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="mb-4" style="color: var(--white);">Plataforma</h4>
+                    <a href="/vagas.html" class="footer-link">Vagas</a>
+                    <a href="/mapa.html" class="footer-link">Mapa de Vagas</a>
+                    <a href="/calendario.html" class="footer-link">Calendário</a>
+                </div>
+                <div>
+                    <h4 class="mb-4" style="color: var(--white);">Institucional</h4>
+                    <a href="/sobre.html" class="footer-link">Sobre Nós</a>
+                    <a href="#" class="footer-link">Impacto Social</a>
+                    <a href="#" class="footer-link">Blog</a>
+                </div>
+                <div>
+                    <h4 class="mb-4" style="color: var(--white);">Contato</h4>
+                    <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">
+                        contato@proximoamor.org
+                    </p>
+                    <div class="flex gap-4">
+                        <!-- Simple social icons placeholders -->
+                        <span style="font-size: 1.5rem; cursor: pointer;">📱</span>
+                        <span style="font-size: 1.5rem; cursor: pointer;">📸</span>
+                        <span style="font-size: 1.5rem; cursor: pointer;">💼</span>
+                    </div>
+                </div>
+            </div>
+            <div style="border-top: 1px solid #334155; padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; color: var(--text-light); font-size: 0.85rem;">
+                <p>&copy; 2024 Próximo Amor. Todos os direitos reservados.</p>
+                <div class="flex gap-8">
+                    <a href="#">Privacidade</a>
+                    <a href="#">Termos</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="/main.js"></script>
+</body>
 </html>

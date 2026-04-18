@@ -2328,3 +2328,118 @@ body {
   transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(0, 102, 204, 0.25);
 }
+
+/* ============================================================
+   RESPONSIVIDADE MOBILE
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .navbar { padding: 1rem 3%; }
+  .nav-links { gap: 1.5rem; }
+  .hero-section { flex-direction: column; text-align: center; padding: 3rem 5%; }
+  .hero-text { max-width: 100%; }
+  .hero-image { max-width: 90%; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .vagas-grid { grid-template-columns: repeat(2, 1fr); }
+  .dashboard-grid-2 { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .ong-sidebar { width: 220px; }
+  .chat-sidebar { width: 260px; }
+}
+
+@media (max-width: 768px) {
+  .navbar { flex-direction: column; gap: 0.75rem; padding: 1rem 4%; }
+  .nav-links { flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+  .logo-container { font-size: 1.25rem; }
+  .btn-primary { padding: 0.6rem 1.25rem; font-size: 0.9rem; }
+  .hero-section { flex-direction: column; text-align: center; padding: 2rem 5%; gap: 2rem; }
+  .hero-title { font-size: 2rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .hero-image { max-width: 100%; }
+  .features-grid, .vagas-grid { grid-template-columns: 1fr; }
+  .stats-grid, .metrics-grid { grid-template-columns: 1fr; }
+  .badges-grid { grid-template-columns: repeat(2, 1fr); }
+  .comms-grid { grid-template-columns: 1fr; }
+  .ong-layout { flex-direction: column; }
+  .ong-sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 0.75rem; gap: 0.25rem; position: relative; }
+  .ong-sidebar .sidebar-logo, .ong-sidebar .sidebar-footer { display: none; }
+  .ong-sidebar nav { display: flex; flex-direction: row; width: 100%; gap: 0.25rem; }
+  .sidebar-item { flex-direction: column; font-size: 0.7rem; padding: 0.5rem; min-width: 70px; text-align: center; border-radius: 8px; gap: 0.25rem; }
+  .sidebar-item span { font-size: 0.65rem; }
+  .ong-main-content { margin-left: 0; }
+  .ong-topbar { padding: 0.75rem 1rem; }
+  .dashboard-content { padding: 1rem; }
+  .vol-nav-bar { flex-direction: column; padding: 0.75rem; gap: 0.75rem; }
+  .vol-nav-items { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.25rem; }
+  .vol-nav-item { flex-direction: column; font-size: 0.7rem; padding: 0.5rem 0.75rem; gap: 0.2rem; }
+  .vol-nav-item span { font-size: 0.65rem; }
+  .vol-main-content { padding: 1rem; }
+  .vol-topbar { flex-direction: column; align-items: flex-start; gap: 0.75rem; padding: 1rem; }
+  .search-bar { width: 100%; }
+  .vol-profile-header { flex-direction: column; text-align: center; gap: 1rem; }
+  .vol-hours-counter { align-self: center; }
+  .filter-bar { flex-wrap: wrap; gap: 0.5rem; }
+  .filter-btn { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
+  .chat-container { flex-direction: column; height: auto; min-height: 500px; }
+  .chat-sidebar { width: 100%; max-height: 200px; border-right: none; border-bottom: 1px solid var(--border-color); }
+  .chat-main { min-height: 350px; }
+  .chat-history { min-height: 200px; }
+  .chat-msg { max-width: 85%; }
+  .modal-content { width: 95vw !important; max-width: 95vw !important; max-height: 90vh; margin: 5vh auto; }
+  .modal-header { padding: 1rem; }
+  .modal-body, .modal-footer { padding: 1rem; }
+  .modal-details-grid { grid-template-columns: 1fr; }
+  .vaga-card-admin { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .vaga-actions { display: flex; width: 100%; gap: 0.5rem; }
+  .vaga-actions button { flex: 1; }
+  .flashcard-summary { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .flashcard-right { align-self: flex-start; }
+  .volunteers-table { font-size: 0.8rem; }
+  .volunteers-table th, .volunteers-table td { padding: 0.5rem; }
+  .about-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .navbar { padding: 0.75rem 3%; }
+  .logo-container { font-size: 1.1rem; }
+  .nav-item { font-size: 0.8rem; }
+  .btn-primary { font-size: 0.8rem; padding: 0.5rem 1rem; }
+  .hero-title { font-size: 1.6rem; line-height: 1.3; }
+  .hero-subtitle { font-size: 0.9rem; }
+  .hero-buttons { flex-direction: column; gap: 0.75rem; }
+  .hero-buttons .btn-primary, .hero-buttons .btn-outline { width: 100%; text-align: center; }
+  .section-title { font-size: 1.5rem; }
+  .section-subtitle { font-size: 0.9rem; }
+  .badges-grid { grid-template-columns: 1fr; }
+  .vol-nav-item { padding: 0.4rem 0.5rem; }
+  .vol-nav-item span { display: none; }
+  .sidebar-item span { display: none; }
+  .sidebar-item { min-width: 45px; padding: 0.5rem; }
+  .chat-sidebar { max-height: 150px; }
+  .contact-item { padding: 0.5rem 0.75rem; gap: 0.5rem; }
+  .contact-avatar { width: 36px; height: 36px; font-size: 0.8rem; }
+  .chat-header { height: 60px; padding: 0 1rem; }
+  .chat-input-area { padding: 0.5rem; gap: 0.5rem; }
+  .chat-send-btn { width: 40px; height: 40px; }
+  .dash-panel { padding: 1rem; }
+  .panel-header { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+  .metric-card { padding: 1rem; }
+  .impact-banner { padding: 1rem; }
+  .impact-text { flex-direction: column; text-align: center; gap: 0.75rem; }
+}
+
+@supports (padding: env(safe-area-inset-bottom)) {
+  .navbar { padding-top: calc(1rem + env(safe-area-inset-top)); }
+  .vol-nav-bar { padding-bottom: calc(0.75rem + env(safe-area-inset-bottom)); }
+  .ong-sidebar { padding-bottom: calc(0.75rem + env(safe-area-inset-bottom)); }
+  .chat-input-area { padding-bottom: calc(0.75rem + env(safe-area-inset-bottom)); }
+}
+
+@media (hover: none) {
+  .btn-primary:hover { transform: none; }
+  .card:hover { transform: none; }
+  .vaga-card:hover { transform: none; }
+  .chat-send-btn:hover { transform: none; }
+  .contact-item:hover { background: transparent; }
+}

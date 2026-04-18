@@ -75,7 +75,7 @@ const translations = {
       darkModeDesc: 'Altere a aparÃªncia de toda a interface.',
       language: 'Idioma do Aplicativo',
       languageDesc: 'Escolha a linguagem principal da interface.',
-      notifications: 'Notificaciones Push',
+      notifications: 'NotificaÃ§Ãµes Push',
       notificationsDesc: 'Receber alertas em tempo real.',
       dataSaver: 'Economia de Dados',
       dataSaverDesc: 'Oculta imagens para economizar internet.',
@@ -102,12 +102,12 @@ const translations = {
         saveCalendar: 'Salvar na Agenda',
         openGps: 'Abrir no GPS',
         back: 'Voltar',
-        apply: 'Quiero me candidatar'
+        apply: 'Quero me candidatar'
       }
     },
     about: {
       title: 'Sobre o PrÃ³ximo Amor',
-      p1: 'O **PrÃ³ximo Amor** Ã© uma plataforma dedicada a conectar voluntÃ¡rios apaixonados a ONGs e projetos sociais que precisam de ajuda. Acreditamos que o trabalho em comunidade Ã© a chave para transformar realidades.',
+      p1: 'O PrÃ³ximo Amor Ã© uma plataforma dedicada a conectar voluntÃ¡rios apaixonados a ONGs e projetos sociais que precisam de ajuda. Acreditamos que o trabalho em comunidade Ã© a chave para transformar realidades.',
       p2: 'Nossa missÃ£o Ã© facilitar o engajamento cÃ­vico, tornando a busca por trabalho voluntÃ¡rio tÃ£o fÃ¡cil e acessÃ­vel quanto possÃ­vel, permitindo que cada pessoa encontre o projeto que mais se alinha aos seus valores e talentos.',
       statVols: 'VoluntÃ¡rios',
       statOngs: 'ONGs Parceiras',
@@ -188,7 +188,7 @@ const translations = {
     },
     about: {
       title: 'About PrÃ³ximo Amor',
-      p1: '**PrÃ³ximo Amor** is a platform dedicated to connecting passionate volunteers with NGOs and social projects that need help. We believe that community work is the key to transforming realities.',
+      p1: 'PrÃ³ximo Amor is a platform dedicated to connecting passionate volunteers with NGOs and social projects that need help. We believe that community work is the key to transforming realities.',
       p2: 'Our mission is to facilitate civic engagement, making the search for volunteer work as easy and accessible as possible, allowing each person to find the project that best aligns with their values and talents.',
       statVols: 'Volunteers',
       statOngs: 'Partner NGOs',
@@ -244,11 +244,11 @@ const translations = {
     ongApp: { overview: 'VisiÃ³n General', jobs: 'GestiÃ³n de Ofertas', volunteers: 'Voluntarios (CRM)', comms: 'ComunicaciÃ³n', reports: 'Informes e Impacto', settingsTitle: 'Configuraciones del Sistema' },
     ongContent: { stats: 'EstadÃ­sticas', activeJobs: 'Ofertas Activas', totalVols: 'Voluntarios', hours: 'Horas Donadas', impact: 'Impacto Estimado', manageRoles: 'Ofertas en Curso', addRole: 'Nueva Oferta', manageVols: 'Nuestros VoluntÃ¡rios', searchVol: 'Buscar voluntÃ¡rio...', reportsAndCerts: 'Informes y Certificados' },
     chat: { title: 'Mensajes', searchHolder: 'Buscar conversaciones...', empty: 'Selecciona una conversaciÃ³n para empezar', write: 'Escribe un mensaje...' },
-    settings: { titleVol: 'Preferencias de la AplicaciÃ³n', titleOng: 'Preferencias de la OrganizaciÃ³n', darkMode: 'Modo Oscuro', darkModeDesc: 'Cambia la apariencia de toda la interfaz.', language: 'Idioma de la AplicaciÃ³n', languageDesc: 'Elige el idioma principal de la interfaz.', notifications: 'Notificaciones Push', notificationsDesc: 'Recibir alertas en tiempo real.', dataSaver: 'Ahorro de Datos', dataSaverDesc: 'Oculta imÃ¡genes para ahorrar datos mÃ³viles.', security: 'Seguridad y Acceso', changePassword: 'Cambiar mi contraseÃ±a actual', deactivateAccount: 'Desactivar mi cuenta', },
+    settings: { titleVol: 'Preferencias de la AplicaciÃ³n', titleOng: 'Preferencias de la OrganizaciÃ³n', darkMode: 'Modo Oscuro', darkModeDesc: 'Cambia la apariencia de toda la interfaz.', language: 'Idioma de la AplicaciÃ³n', languageDesc: 'Elige el idioma principal de la interfaz.', notifications: 'Notificaciones Push', notificationsDesc: 'Recibir alertas en tiempo real.', dataSaver: 'Ahorro de Dados', dataSaverDesc: 'Oculta imÃ¡genes para ahorrar datos mÃ³viles.', security: 'Seguridad y Acceso', changePassword: 'Cambiar mi contraseÃ±a actual', deactivateAccount: 'Desactivar mi cuenta', },
     home: {
       hero: {
         title: 'Marca la diferencia en la vida de alguien hoy',
-        subtitle: 'Conectamos corazones dispuestos a ayudar con causas que transforman el mundo. Encuentra la oportunidad perfecta para tu talento.',
+        subtitle: 'Conectamos corazones dispuestos a ayudar con causas que transformam el mundo. Encuentra la oportunidad perfecta para tu talento.',
         searchPlaceholder: 'Buscar por causa, habilidad o ciudad...',
         searchBtn: 'Buscar'
       },
@@ -269,7 +269,7 @@ const translations = {
     },
     about: {
       title: 'Sobre PrÃ³ximo Amor',
-      p1: '**PrÃ³ximo Amor** es una plataforma dedicada a conectar voluntarios apasionados con ONGs y proyectos sociales que necesitan ayuda. Creemos que el trabajo comunitario es la clave para transformar realidades.',
+      p1: 'PrÃ³ximo Amor es una plataforma dedicada a conectar voluntarios apasionados con ONGs y proyectos sociales que necesitan ayuda. Creemos que el trabajo comunitario es la clave para transformar realidades.',
       p2: 'Nuestra misiÃ³n es facilitar el compromiso cÃ­vico, haciendo que la bÃºsqueda de voluntariado sea lo mÃ¡s fÃ¡cil e inteligente posible, permitiendo que cada persona encuentre el proyecto que mejor se alinee con sus valores y talentos.',
       statVols: 'Voluntarios',
       statOngs: 'ONGs Colaboradoras',

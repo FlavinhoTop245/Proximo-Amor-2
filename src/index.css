@@ -105,8 +105,9 @@ body {
 
 .nav-item {
   text-decoration: none;
-  color: var(--text-dark);
-  font-weight: 500;
+  color: #0b1c3c;
+  font-weight: 600;
+  font-size: 1rem;
   transition: color 0.2s ease;
 }
 

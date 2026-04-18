@@ -133,6 +133,44 @@ body {
   box-shadow: 0 6px 20px rgba(0, 102, 204, 0.23);
 }
 
+/* Dropdown de Cadastro */
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-menu-wrapper {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  padding-top: 0.5rem;
+  z-index: 200;
+}
+
+.dropdown-menu {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  min-width: 200px;
+  animation: fadeInDown 0.2s ease;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 0.85rem 1.25rem;
+  text-decoration: none;
+  color: var(--text-dark);
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.dropdown-item:hover {
+  background: var(--dashboard-bg);
+  color: var(--azure-blue);
+}
+
 /* Hero Section */
 .hero {
   position: relative;

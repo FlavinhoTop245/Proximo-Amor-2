@@ -13,7 +13,8 @@ import {
   PlusCircle,
   Search,
   MapPin,
-  ExternalLink
+  ExternalLink,
+  X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getMapsUrl, getCalendarUrl } from '../utils';
@@ -24,6 +25,15 @@ const OngDashboard = () => {
   const [activeTab, setActiveTab] = useState('geral');
   const [isDarkMode, setIsDarkMode] = useState(() => document.body.classList.contains('dark-theme'));
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  // Estados para Criação de Vagas
+  const [isCreatingJob, setIsCreatingJob] = useState(false);
+  const [newJobTitle, setNewJobTitle] = useState('');
+  const [newJobCategory, setNewJobCategory] = useState('Educação');
+  const [newJobType, setNewJobType] = useState('Remoto');
+  const [myRoles, setMyRoles] = useState([
+    { id: 1, title: 'Professor Voluntário de Matemática', category: 'Educação', type: 'Remoto', subscribers: 12, exp: '5 dias' }
+  ]);
 
   const { language, setLanguage, t } = useLanguage();
 
@@ -240,28 +250,30 @@ const OngDashboard = () => {
             <div className="fade-in">
               <div className="panel-header" style={{ borderBottom: 'none' }}>
                 <h2>{t('ongContent.manageRoles')}</h2>
-                <button className="btn-primary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <button className="btn-primary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }} onClick={() => setIsCreatingJob(true)}>
                   <PlusCircle size={20} /> {t('ongContent.addRole')}
                 </button>
               </div>
               <div className="vagas-list">
-                <div className="vaga-card-admin">
-                  <div className="vaga-info">
-                    <h3>Professor Voluntário de Matemática</h3>
-                    <div className="vaga-tags">
-                      <span className="tag blue">Educação</span>
-                      <span className="tag gray">Remoto</span>
+                {myRoles.map(role => (
+                  <div key={role.id} className="vaga-card-admin fade-in">
+                    <div className="vaga-info">
+                      <h3>{role.title}</h3>
+                      <div className="vaga-tags">
+                        <span className={`tag ${role.category === 'Educação' ? 'blue' : role.category === 'Saúde' ? 'green' : 'gray'}`}>{role.category}</span>
+                        <span className="tag gray">{role.type}</span>
+                      </div>
+                    </div>
+                    <div className="vaga-stats">
+                      <p><strong>{role.subscribers}</strong> Inscritos</p>
+                      <p>Expira em: <strong>{role.exp}</strong></p>
+                    </div>
+                    <div className="vaga-actions">
+                      <button className="btn-outline">Editar Vaga</button>
+                      <button className="btn-outline">Ver Triagem</button>
                     </div>
                   </div>
-                  <div className="vaga-stats">
-                    <p><strong>12</strong> Inscritos</p>
-                    <p>Expira em: <strong>5 dias</strong></p>
-                  </div>
-                  <div className="vaga-actions">
-                    <button className="btn-outline">Editar Vaga</button>
-                    <button className="btn-outline">Ver Triagem</button>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           )}
@@ -458,6 +470,76 @@ const OngDashboard = () => {
           )}
         </div>
       </main>
+
+      {/* JOB CREATION MODAL */}
+      {isCreatingJob && (
+        <div className="modal-backdrop" onClick={() => setIsCreatingJob(false)}>
+          <div className="modal-content fade-in" style={{ maxWidth: '450px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Criar Nova Vaga</h2>
+              <button className="btn-close" onClick={() => setIsCreatingJob(false)}><X size={24} /></button>
+            </div>
+            <div style={{ padding: '1.5rem 2rem' }}>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Título da Vaga / Função</label>
+                <input 
+                  type="text" 
+                  value={newJobTitle}
+                  onChange={(e) => setNewJobTitle(e.target.value)}
+                  placeholder="Ex: Designer Voluntário, Dentista..."
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none' }}
+                />
+              </div>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Causa (Categoria principal)</label>
+                <select 
+                  value={newJobCategory}
+                  onChange={(e) => setNewJobCategory(e.target.value)}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none' }}
+                >
+                  <option value="Educação">Educação</option>
+                  <option value="Saúde">Saúde</option>
+                  <option value="Meio Ambiente">Meio Ambiente</option>
+                  <option value="Animais">Animais</option>
+                  <option value="Tecnologia">Tecnologia e Design</option>
+                </select>
+              </div>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Modalidade</label>
+                <select 
+                  value={newJobType}
+                  onChange={(e) => setNewJobType(e.target.value)}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none' }}
+                >
+                  <option value="Remoto">Remoto (Online)</option>
+                  <option value="Presencial">Presencial (Endereço da ONG)</option>
+                  <option value="Híbrido">Híbrido</option>
+                </select>
+              </div>
+              <button 
+                className="btn-primary" 
+                style={{ width: '100%', padding: '1rem' }}
+                onClick={() => {
+                  if(!newJobTitle.trim()) return;
+                  const newRole = {
+                    id: Date.now(),
+                    title: newJobTitle,
+                    category: newJobCategory,
+                    type: newJobType,
+                    subscribers: 0,
+                    exp: '30 dias'
+                  };
+                  setMyRoles([newRole, ...myRoles]);
+                  setNewJobTitle('');
+                  setIsCreatingJob(false);
+                }}
+              >
+                Publicar Vaga
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

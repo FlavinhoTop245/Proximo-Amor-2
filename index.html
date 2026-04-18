@@ -5,6 +5,17 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Próximo Amor | Conectando Corações e Causas</title>
+    <script>
+      // Redirecionamento para SPA com HashRouter no GitHub Pages
+      (function() {
+        var path = window.location.pathname;
+        var hash = window.location.hash;
+        // Se estiver na raiz do projeto e não tiver hash, redireciona para #/
+        if (window.location.protocol !== 'file:' && (path === '/Proximo-Amor-2' || path === '/Proximo-Amor-2/') && !hash) {
+          window.location.replace(window.location.origin + '/Proximo-Amor-2/#/');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

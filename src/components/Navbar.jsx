@@ -1,18 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { HeartHandshake, ChevronDown, Globe } from 'lucide-react';
+import { HeartHandshake, ChevronDown, Globe, Menu, X } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import '../index.css';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   const location = useLocation();
   const { t, language, setLanguage } = useLanguage();
 
-  // Close dropdown when route changes
+  // Close menus when route changes
   useEffect(() => {
     setIsDropdownOpen(false);
+    setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
   // Handle clicking outside to close
@@ -28,11 +30,22 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <Link to="/" className="logo-container">
-        <HeartHandshake className="logo-icon" size={28} />
-        <span>Próximo Amor</span>
-      </Link>
-      <div className="nav-links">
+      <div className="navbar-top">
+        <Link to="/" className="logo-container">
+          <HeartHandshake className="logo-icon" size={28} />
+          <span>Próximo Amor</span>
+        </Link>
+
+        <button 
+          className="mobile-menu-btn"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Menu"
+        >
+          {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+        </button>
+      </div>
+
+      <div className={`nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
         <div className="dropdown-container">
           <button 
             className="nav-item" 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Compass,
   User,
@@ -35,6 +35,16 @@ const VolunteerDashboard = () => {
   const [activeFilter, setActiveFilter] = useState('todos');
   const [savedVagas, setSavedVagas] = useState([]);
   const [selectedVaga, setSelectedVaga] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(() => document.body.classList.contains('dark-theme'));
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
+  }, [isDarkMode]);
 
   const toggleSave = (e, id) => {
     e.stopPropagation();
@@ -137,6 +147,9 @@ const VolunteerDashboard = () => {
         </div>
 
         <div className="vol-nav-right">
+          <button className={`vol-icon-btn ${activeTab === 'configuracoes' ? 'active' : ''}`} onClick={() => setActiveTab('configuracoes')} title="Configurações">
+            <Settings size={20} />
+          </button>
           <Link to="/" className="vol-icon-btn"><LogOut size={20} /></Link>
           <button className={`vol-profile-btn ${activeTab === 'perfil' ? 'active' : ''}`} onClick={() => setActiveTab('perfil')}>
             <div className="vol-avatar-sm">LM</div>
@@ -153,6 +166,7 @@ const VolunteerDashboard = () => {
             {activeTab === 'perfil' && 'Meu Currículo do Bem'}
             {activeTab === 'conquistas' && 'Minhas Conquistas'}
             {activeTab === 'comunidade' && 'Comunidade & Aprendizado'}
+            {activeTab === 'configuracoes' && 'Configurações'}
           </h1>
           {activeTab === 'descobrir' && (
             <div className="search-bar" style={{ background: 'white' }}>
@@ -456,6 +470,86 @@ const VolunteerDashboard = () => {
                     <ChevronRight size={20} color="var(--text-gray)" />
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* ===================== CONFIGURAÇÕES ===================== */}
+          {activeTab === 'configuracoes' && (
+            <div className="fade-in">
+              <div className="dash-panel" style={{ maxWidth: '600px', margin: '0 auto' }}>
+                <h3 className="panel-title" style={{ marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>Preferências do Aplicativo</h3>
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <div>
+                    <h4 style={{ fontWeight: 600 }}>Modo Escuro (Dark Mode)</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>Altere a aparência de toda a interface do sistema.</p>
+                  </div>
+                  <button 
+                    onClick={() => setIsDarkMode(!isDarkMode)} 
+                    style={{
+                      background: isDarkMode ? 'var(--azure-blue)' : '#e2e8f0',
+                      border: 'none',
+                      borderRadius: '999px',
+                      width: '50px',
+                      height: '26px',
+                      position: 'relative',
+                      cursor: 'pointer',
+                      transition: 'background 0.3s ease'
+                    }}
+                  >
+                    <div style={{
+                      background: 'white',
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      position: 'absolute',
+                      top: '3px',
+                      left: isDarkMode ? '27px' : '3px',
+                      transition: 'left 0.3s ease'
+                    }}></div>
+                  </button>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <div>
+                    <h4 style={{ fontWeight: 600 }}>Notificações Push</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>Receber alertas sobre vagas urgentes.</p>
+                  </div>
+                  <button 
+                    onClick={() => setNotificationsEnabled(!notificationsEnabled)} 
+                    style={{
+                      background: notificationsEnabled ? 'var(--azure-blue)' : '#e2e8f0',
+                      border: 'none',
+                      borderRadius: '999px',
+                      width: '50px',
+                      height: '26px',
+                      position: 'relative',
+                      cursor: 'pointer',
+                      transition: 'background 0.3s ease'
+                    }}
+                  >
+                    <div style={{
+                      background: 'white',
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      position: 'absolute',
+                      top: '3px',
+                      left: notificationsEnabled ? '27px' : '3px',
+                      transition: 'left 0.3s ease'
+                    }}></div>
+                  </button>
+                </div>
+
+                <div style={{ borderBottom: '1px solid var(--border-color)', margin: '2rem 0' }}></div>
+
+                <h3 className="panel-title" style={{ marginBottom: '1.5rem' }}>Segurança</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <button className="btn-outline" style={{ display: 'block', width: '100%', textAlign: 'left', padding: '1rem' }}>Alterar minha senha atual</button>
+                  <button className="btn-outline" style={{ display: 'block', width: '100%', textAlign: 'left', padding: '1rem', color: '#ef4444', borderColor: '#fee2e2' }}>Desativar minha conta</button>
+                </div>
+
               </div>
             </div>
           )}

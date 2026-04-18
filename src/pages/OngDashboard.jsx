@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, 
   Briefcase, 
@@ -20,6 +20,16 @@ import { getMapsUrl, getCalendarUrl } from '../utils';
 
 const OngDashboard = () => {
   const [activeTab, setActiveTab] = useState('geral');
+  const [isDarkMode, setIsDarkMode] = useState(() => document.body.classList.contains('dark-theme'));
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
+  }, [isDarkMode]);
 
   const projects = [
     {
@@ -98,7 +108,9 @@ const OngDashboard = () => {
           </button>
         </nav>
         <div className="sidebar-footer">
-          <button className="nav-btn"><Settings size={20} /> Configurações</button>
+          <button className={`nav-btn ${activeTab === 'configuracoes' ? 'active' : ''}`} onClick={() => setActiveTab('configuracoes')}>
+            <Settings size={20} /> Configurações
+          </button>
           <Link to="/" className="nav-btn text-danger"><LogOut size={20} /> Sair</Link>
         </div>
       </aside>
@@ -112,6 +124,7 @@ const OngDashboard = () => {
             {activeTab === 'voluntarios' && 'Banco de Voluntários'}
             {activeTab === 'comunicacao' && 'Central de Comunicação'}
             {activeTab === 'relatorios' && 'Relatórios e Impacto'}
+            {activeTab === 'configuracoes' && 'Configurações do Sistema'}
           </h1>
           <div className="topbar-actions">
             <div className="search-bar">
@@ -360,6 +373,86 @@ const OngDashboard = () => {
                   <h4>Exportar Relatório</h4>
                   <p>Baixe dados de impacto em PDF ou Excel.</p>
                 </button>
+              </div>
+            </div>
+          )}
+
+          {/* ===================== CONFIGURAÇÕES ===================== */}
+          {activeTab === 'configuracoes' && (
+            <div className="fade-in">
+              <div className="dash-panel" style={{ maxWidth: '600px' }}>
+                <h3 className="panel-title" style={{ marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>Preferências da Organização</h3>
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <div>
+                    <h4 style={{ fontWeight: 600 }}>Modo Escuro (Dark Mode)</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>Altere a aparência de toda a interface do painel.</p>
+                  </div>
+                  <button 
+                    onClick={() => setIsDarkMode(!isDarkMode)} 
+                    style={{
+                      background: isDarkMode ? 'var(--azure-blue)' : '#e2e8f0',
+                      border: 'none',
+                      borderRadius: '999px',
+                      width: '50px',
+                      height: '26px',
+                      position: 'relative',
+                      cursor: 'pointer',
+                      transition: 'background 0.3s ease'
+                    }}
+                  >
+                    <div style={{
+                      background: 'white',
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      position: 'absolute',
+                      top: '3px',
+                      left: isDarkMode ? '27px' : '3px',
+                      transition: 'left 0.3s ease'
+                    }}></div>
+                  </button>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <div>
+                    <h4 style={{ fontWeight: 600 }}>Notificações Push</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>Receber alertas de novas candidaturas em tempo real.</p>
+                  </div>
+                  <button 
+                    onClick={() => setNotificationsEnabled(!notificationsEnabled)} 
+                    style={{
+                      background: notificationsEnabled ? 'var(--azure-blue)' : '#e2e8f0',
+                      border: 'none',
+                      borderRadius: '999px',
+                      width: '50px',
+                      height: '26px',
+                      position: 'relative',
+                      cursor: 'pointer',
+                      transition: 'background 0.3s ease'
+                    }}
+                  >
+                    <div style={{
+                      background: 'white',
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      position: 'absolute',
+                      top: '3px',
+                      left: notificationsEnabled ? '27px' : '3px',
+                      transition: 'left 0.3s ease'
+                    }}></div>
+                  </button>
+                </div>
+
+                <div style={{ borderBottom: '1px solid var(--border-color)', margin: '2rem 0' }}></div>
+
+                <h3 className="panel-title" style={{ marginBottom: '1.5rem' }}>Segurança & Acesso</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <button className="btn-outline" style={{ display: 'block', width: '100%', textAlign: 'left', padding: '1rem' }}>Alterar minha senha atual</button>
+                  <button className="btn-outline" style={{ display: 'block', width: '100%', textAlign: 'left', padding: '1rem', color: '#ef4444', borderColor: '#fee2e2' }}>Desativar conta da instituição</button>
+                </div>
+
               </div>
             </div>
           )}

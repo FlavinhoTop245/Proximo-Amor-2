@@ -139,15 +139,15 @@ const VolunteerDashboard = () => {
         <div className="vol-nav-center">
           <button className={`vol-nav-item ${activeTab === 'descobrir' ? 'active' : ''}`} onClick={() => setActiveTab('descobrir')}>
             <Compass size={22} />
-            <span>Descobrir</span>
+            <span>{t('nav.discover')}</span>
           </button>
           <button className={`vol-nav-item ${activeTab === 'conquistas' ? 'active' : ''}`} onClick={() => setActiveTab('conquistas')}>
             <Trophy size={22} />
-            <span>Conquistas</span>
+            <span>{t('nav.achievements')}</span>
           </button>
           <button className={`vol-nav-item ${activeTab === 'comunidade' ? 'active' : ''}`} onClick={() => setActiveTab('comunidade')}>
             <BookOpen size={22} />
-            <span>Comunidade</span>
+            <span>{t('nav.community')}</span>
           </button>
         </div>
 
@@ -167,16 +167,16 @@ const VolunteerDashboard = () => {
       <main className="vol-main-content">
         <header className="vol-page-header">
           <h1>
-            {activeTab === 'descobrir' && 'Descobrir Oportunidades'}
-            {activeTab === 'perfil' && 'Meu Currículo do Bem'}
-            {activeTab === 'conquistas' && 'Minhas Conquistas'}
-            {activeTab === 'comunidade' && 'Comunidade & Aprendizado'}
-            {activeTab === 'configuracoes' && 'Configurações'}
+            {activeTab === 'descobrir' && t('volApp.discoverTitle')}
+            {activeTab === 'perfil' && t('nav.profile')}
+            {activeTab === 'conquistas' && t('volApp.achievementsTitle')}
+            {activeTab === 'comunidade' && t('volApp.communityTitle')}
+            {activeTab === 'configuracoes' && t('nav.settings')}
           </h1>
           {activeTab === 'descobrir' && (
             <div className="search-bar" style={{ background: 'white' }}>
               <Search size={18} />
-              <input type="text" placeholder="Buscar vagas, ONGs..." />
+              <input type="text" placeholder={t('volApp.searchPlaceholder')} />
             </div>
           )}
         </header>
@@ -188,7 +188,7 @@ const VolunteerDashboard = () => {
             <div className="fade-in">
               {/* Interests */}
               <div className="vol-interests">
-                <h3>Suas Causas</h3>
+                <h3>{t('volApp.causes')}</h3>
                 <div className="interest-tags">
                   <span className="interest-tag active">🌱 Meio Ambiente</span>
                   <span className="interest-tag">📚 Educação</span>
@@ -199,11 +199,11 @@ const VolunteerDashboard = () => {
 
               {/* Quick Filters */}
               <div className="vol-filters">
-                <button className={`filter-chip ${activeFilter === 'todos' ? 'active' : ''}`} onClick={() => setActiveFilter('todos')}>Todas</button>
-                <button className={`filter-chip ${activeFilter === 'remotas' ? 'active' : ''}`} onClick={() => setActiveFilter('remotas')}><Monitor size={14} /> Remotas</button>
-                <button className={`filter-chip ${activeFilter === 'curtas' ? 'active' : ''}`} onClick={() => setActiveFilter('curtas')}><Clock size={14} /> Curta Duração</button>
-                <button className={`filter-chip ${activeFilter === 'urgentes' ? 'active' : ''}`} onClick={() => setActiveFilter('urgentes')}><Zap size={14} /> Urgentes</button>
-                <button className={`filter-chip ${activeFilter === 'salvos' ? 'active' : ''}`} onClick={() => setActiveFilter('salvos')}><Bookmark size={14} /> Salvos ({savedVagas.length})</button>
+                <button className={`filter-chip ${activeFilter === 'todos' ? 'active' : ''}`} onClick={() => setActiveFilter('todos')}>{t('volApp.filters.all')}</button>
+                <button className={`filter-chip ${activeFilter === 'remotas' ? 'active' : ''}`} onClick={() => setActiveFilter('remotas')}><Monitor size={14} /> {t('volApp.filters.remote')}</button>
+                <button className={`filter-chip ${activeFilter === 'curtas' ? 'active' : ''}`} onClick={() => setActiveFilter('curtas')}><Clock size={14} /> {t('volApp.filters.short')}</button>
+                <button className={`filter-chip ${activeFilter === 'urgentes' ? 'active' : ''}`} onClick={() => setActiveFilter('urgentes')}><Zap size={14} /> {t('volApp.filters.urgent')}</button>
+                <button className={`filter-chip ${activeFilter === 'salvos' ? 'active' : ''}`} onClick={() => setActiveFilter('salvos')}><Bookmark size={14} /> {t('volApp.filters.saved')} ({savedVagas.length})</button>
               </div>
 
               {/* Cards Grid */}
@@ -232,7 +232,7 @@ const VolunteerDashboard = () => {
                       <p className="vol-vaga-org">{vaga.org}</p>
                       <div className="vol-vaga-footer">
                         <span><MapPin size={14} /> {vaga.location.length > 25 ? vaga.location.substring(0, 25) + '...' : vaga.location}</span>
-                        <button className="btn-primary" style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}>Detalhes</button>
+                        <button className="btn-primary" style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}>{t('volApp.detailsBtn')}</button>
                       </div>
                     </div>
                   </div>

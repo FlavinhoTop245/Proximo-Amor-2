@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { HeartHandshake, ChevronDown } from 'lucide-react';
+import { HeartHandshake, ChevronDown, Globe } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 import '../index.css';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const location = useLocation();
+  const { t, language, setLanguage } = useLanguage();
 
   // Close dropdown when route changes
   useEffect(() => {
@@ -31,9 +33,19 @@ const Navbar = () => {
         <span>Próximo Amor</span>
       </Link>
       <div className="nav-links">
-        <Link to="/sobre" className="nav-item">Sobre Nós</Link>
-        <Link to="/#vagas" className="nav-item">Vagas</Link>
-        <Link to="/login" className="nav-item">Login</Link>
+        <div className="dropdown-container">
+          <button 
+            className="nav-item" 
+            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--text-dark)', fontWeight: 500 }}
+            onClick={() => setLanguage(language === 'pt-br' ? 'en' : language === 'en' ? 'es' : 'pt-br')}
+          >
+            <Globe size={16} /> {language.toUpperCase()}
+          </button>
+        </div>
+
+        <Link to="/sobre" className="nav-item">{t('publicNav.about')}</Link>
+        <Link to="/#vagas" className="nav-item">{t('publicNav.jobs')}</Link>
+        <Link to="/login" className="nav-item">{t('publicNav.login')}</Link>
         
         <div 
           className="dropdown-container"
@@ -46,17 +58,17 @@ const Navbar = () => {
             style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
-            Cadastrar <ChevronDown size={18} />
+            {t('publicNav.register')} <ChevronDown size={18} />
           </button>
           
           {isDropdownOpen && (
             <div className="dropdown-menu-wrapper">
               <div className="dropdown-menu">
                 <Link to="/cadastro/ong" className="dropdown-item">
-                  Cadastro de ONGs
+                  {t('publicNav.registerOng')}
                 </Link>
                 <Link to="/cadastro/voluntario" className="dropdown-item">
-                  Cadastro de Voluntários
+                  {t('publicNav.registerVol')}
                 </Link>
               </div>
             </div>

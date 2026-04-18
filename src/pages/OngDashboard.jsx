@@ -97,24 +97,24 @@ const OngDashboard = () => {
         </div>
         <nav className="sidebar-nav">
           <button className={`nav-btn ${activeTab === 'geral' ? 'active' : ''}`} onClick={() => setActiveTab('geral')}>
-            <LayoutDashboard size={20} /> Visão Geral
+            <LayoutDashboard size={20} /> {t('ongApp.overview')}
           </button>
           <button className={`nav-btn ${activeTab === 'vagas' ? 'active' : ''}`} onClick={() => setActiveTab('vagas')}>
-            <Briefcase size={20} /> Gestão de Vagas
+            <Briefcase size={20} /> {t('ongApp.jobs')}
           </button>
           <button className={`nav-btn ${activeTab === 'voluntarios' ? 'active' : ''}`} onClick={() => setActiveTab('voluntarios')}>
-            <Users size={20} /> Voluntários (CRM)
+            <Users size={20} /> {t('ongApp.volunteers')}
           </button>
           <button className={`nav-btn ${activeTab === 'comunicacao' ? 'active' : ''}`} onClick={() => setActiveTab('comunicacao')}>
-            <MessageSquare size={20} /> Comunicação
+            <MessageSquare size={20} /> {t('ongApp.comms')}
           </button>
           <button className={`nav-btn ${activeTab === 'relatorios' ? 'active' : ''}`} onClick={() => setActiveTab('relatorios')}>
-            <FileText size={20} /> Relatórios & Certificados
+            <FileText size={20} /> {t('ongApp.reports')}
           </button>
         </nav>
         <div className="sidebar-footer">
           <button className={`nav-btn ${activeTab === 'configuracoes' ? 'active' : ''}`} onClick={() => setActiveTab('configuracoes')}>
-            <Settings size={20} /> Configurações
+            <Settings size={20} /> {t('nav.settings')}
           </button>
           <Link to="/" className="nav-btn text-danger"><LogOut size={20} /> Sair</Link>
         </div>
@@ -124,12 +124,12 @@ const OngDashboard = () => {
       <main className="dashboard-main">
         <header className="dashboard-topbar">
           <h1>
-            {activeTab === 'geral' && 'Visão Geral'}
-            {activeTab === 'vagas' && 'Gestão de Vagas'}
-            {activeTab === 'voluntarios' && 'Banco de Voluntários'}
-            {activeTab === 'comunicacao' && 'Central de Comunicação'}
-            {activeTab === 'relatorios' && 'Relatórios e Impacto'}
-            {activeTab === 'configuracoes' && 'Configurações do Sistema'}
+            {activeTab === 'geral' && t('ongApp.overview')}
+            {activeTab === 'vagas' && t('ongApp.jobs')}
+            {activeTab === 'voluntarios' && t('ongApp.volunteers')}
+            {activeTab === 'comunicacao' && t('ongApp.comms')}
+            {activeTab === 'relatorios' && t('ongApp.reports')}
+            {activeTab === 'configuracoes' && t('ongApp.settingsTitle')}
           </h1>
           <div className="topbar-actions">
             <div className="search-bar">

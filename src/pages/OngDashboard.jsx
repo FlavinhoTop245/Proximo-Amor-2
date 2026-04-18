@@ -18,6 +18,7 @@ import {
 import { Link } from 'react-router-dom';
 import { getMapsUrl, getCalendarUrl } from '../utils';
 import { useLanguage } from '../contexts/LanguageContext';
+import ChatMessenger from '../components/ChatMessenger';
 
 const OngDashboard = () => {
   const [activeTab, setActiveTab] = useState('geral');
@@ -337,29 +338,8 @@ const OngDashboard = () => {
             </div>
           )}
 
-          {activeTab === 'comunicacao' && (
-            <div className="fade-in dash-panel">
-              <h3>Central de Comunicação</h3>
-              <p style={{ color: 'var(--text-gray)', marginBottom: '2rem' }}>Envie mensagens para seus voluntários sem precisar do WhatsApp pessoal.</p>
-              
-              <div className="comms-grid">
-                <button className="comm-card">
-                  <MessageSquare size={32} color="var(--azure-blue)" />
-                  <h4>Chat Interno</h4>
-                  <p>Fale diretamente com os voluntários ativos do seu projeto.</p>
-                </button>
-                <button className="comm-card">
-                  <Users size={32} color="var(--navy-blue)" />
-                  <h4>Mensagem em Massa</h4>
-                  <p>Envie um aviso para todos de uma só vez.</p>
-                </button>
-                <button className="comm-card">
-                  <FileText size={32} color="#10b981" />
-                  <h4>Modelos Prontos</h4>
-                  <p>Use templates de "Agradecimento" ou "Convite".</p>
-                </button>
-              </div>
-            </div>
+        {activeTab === 'comunicacao' && (
+            <ChatMessenger userType="ong" />
           )}
 
           {activeTab === 'relatorios' && (

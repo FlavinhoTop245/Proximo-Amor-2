@@ -30,6 +30,7 @@ import {
 import { Link } from 'react-router-dom';
 import { getMapsUrl, getCalendarUrl } from '../utils';
 import { useLanguage } from '../contexts/LanguageContext';
+import ChatMessenger from '../components/ChatMessenger';
 
 const VolunteerDashboard = () => {
   const [activeTab, setActiveTab] = useState('descobrir');
@@ -149,6 +150,10 @@ const VolunteerDashboard = () => {
             <BookOpen size={22} />
             <span>{t('nav.community')}</span>
           </button>
+          <button className={`vol-nav-item ${activeTab === 'mensagens' ? 'active' : ''}`} onClick={() => setActiveTab('mensagens')}>
+            <MessageCircle size={22} />
+            <span>{t('nav.messages') || 'Mensagens'}</span>
+          </button>
         </div>
 
         <div className="vol-nav-right">
@@ -171,6 +176,7 @@ const VolunteerDashboard = () => {
             {activeTab === 'perfil' && t('nav.profile')}
             {activeTab === 'conquistas' && t('volApp.achievementsTitle')}
             {activeTab === 'comunidade' && t('volApp.communityTitle')}
+            {activeTab === 'mensagens' && (t('nav.messages') || 'Mensagens')}
             {activeTab === 'configuracoes' && t('nav.settings')}
           </h1>
           {activeTab === 'descobrir' && (
@@ -480,6 +486,10 @@ const VolunteerDashboard = () => {
           )}
 
           {/* ===================== CONFIGURAÇÕES ===================== */}
+          {activeTab === 'mensagens' && (
+            <ChatMessenger userType="volunteer" />
+          )}
+
           {activeTab === 'configuracoes' && (
             <div className="fade-in">
               <div className="dash-panel" style={{ maxWidth: '600px', margin: '0 auto' }}>

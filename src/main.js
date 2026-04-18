@@ -1,60 +1,103 @@
-import './style.css'
-import javascriptLogo from './assets/javascript.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import { setupCounter } from './counter.js'
+import { jobs } from './data.js';
 
-document.querySelector('#app').innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${javascriptLogo}" class="framework" alt="JavaScript logo"/>
-    <img src=${viteLogo} class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.js</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+// Function to render job cards
+function renderRecentJobs() {
+    const container = document.getElementById('recent-jobs-container');
+    if (!container) return;
 
-<div class="ticks"></div>
+    // Show only the first 3 for recent jobs
+    const displayJobs = jobs.slice(0, 3);
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src=${viteLogo} alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-          <img class="button-icon" src="${javascriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+    container.innerHTML = displayJobs.map(job => `
+        <div class="card">
+            <div class="badge badge-primary mb-4">${job.category}</div>
+            <h3 class="mb-4">${job.title}</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                ${job.description}
+            </p>
+            <div class="flex justify-between items-center mt-auto">
+                <span style="font-size: 0.875rem; color: var(--text-light); display: flex; align-items: center; gap: 0.25rem;">
+                    📍 ${job.location}
+                </span>
+                <button class="btn btn-primary btn-sm" onclick="participate(${job.id})">Participar</button>
+            </div>
+        </div>
+    `).join('');
+}
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+// Global function for participation
+window.participate = (id) => {
+    const isLogged = localStorage.getItem('user_logged');
+    
+    if (!isLogged) {
+        showToast("Você precisa estar logado para participar!", "error");
+        setTimeout(() => {
+            window.location.href = "/login.html";
+        }, 1500);
+        return;
+    }
 
-setupCounter(document.querySelector('#counter'))
+    let joinedJobs = JSON.parse(localStorage.getItem('joined_jobs') || '[]');
+    if (!joinedJobs.includes(id)) {
+        joinedJobs.push(id);
+        localStorage.setItem('joined_jobs', JSON.stringify(joinedJobs));
+        showToast("Inscrição realizada com sucesso! 💙");
+        setTimeout(() => {
+            window.location.href = "/perfil.html";
+        }, 1500);
+    } else {
+        showToast("Você já está inscrito nesta vaga!", "info");
+    }
+};
+
+// Toast notification system
+function showToast(message, type = "success") {
+    let toast = document.querySelector('.toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+    }
+    
+    const icon = type === "error" ? "❌" : (type === "info" ? "ℹ️" : "💙");
+    toast.style.borderLeftColor = type === "error" ? "var(--error)" : (type === "info" ? "var(--secondary)" : "var(--success)");
+    
+    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+// Mobile Menu Toggle
+function setupMobileMenu() {
+    const toggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('nav-menu');
+    if (toggle && menu) {
+        toggle.addEventListener('click', () => {
+            menu.classList.toggle('active');
+        });
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    renderRecentJobs();
+    setupMobileMenu();
+
+    // Check if user is logged in (mock)
+    const isLogged = localStorage.getItem('user_logged');
+    if (isLogged) {
+        const loginBtn = document.querySelector('a[href="/login.html"]');
+        if (loginBtn) {
+            loginBtn.innerText = 'Meu Perfil';
+            loginBtn.href = '/perfil.html';
+            loginBtn.classList.remove('btn-outline');
+            loginBtn.classList.add('btn-primary');
+        }
+        const registerBtn = document.querySelector('a[href="/cadastro.html"]');
+        if (registerBtn) {
+            registerBtn.style.display = 'none';
+        }
+    }
+});

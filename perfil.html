@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Perfil | Próximo Amor</title>
-    <link rel="stylesheet" href="/style.css">
+    <title>Perfil | Próximo Amor</title>
+    <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
     <header class="header">
@@ -17,132 +17,15 @@
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/vagas.html">Vagas</a></li>
-                    <li><a href="/sobre.html">Sobre Nós</a></li>
-                    <li><a href="/calendario.html">Calendário</a></li>
-                    <li><a href="/mapa.html">Mapa</a></li>
                     <li><a href="/perfil.html" class="active">Meu Perfil</a></li>
                 </ul>
             </nav>
-            <button class="menu-toggle" id="menu-toggle">☰</button>
         </div>
     </header>
-
-    <main>
-        <section class="section" style="background: var(--primary-50); padding: var(--s-xl) 0;">
-            <div class="container">
-                <div class="flex items-center gap-8">
-                    <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--primary-600); color: var(--white); display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: 700;">
-                        V
-                    </div>
-                    <div>
-                        <h1 id="user-name">Voluntário Incrível</h1>
-                        <p id="user-email" style="color: var(--text-muted);">voluntario@exemplo.com</p>
-                        <div class="flex gap-2 mt-2" id="user-interests">
-                            <!-- Interests will be injected -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="container">
-                <div class="grid grid-cols-4 gap-8">
-                    <aside>
-                        <div class="card">
-                            <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
-                                <li><a href="#" style="font-weight: 700; color: var(--primary-600);">📋 Minhas Inscrições</a></li>
-                                <li><a href="#" style="color: var(--text-muted);">⚙️ Configurações</a></li>
-                                <li><a href="#" style="color: var(--text-muted);">📊 Meu Impacto</a></li>
-                                <li style="border-top: 1px solid var(--border); padding-top: 1rem;">
-                                    <a href="#" id="logout-btn" style="color: var(--error);">🚪 Sair da Conta</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </aside>
-
-                    <div style="grid-column: span 3;">
-                        <h2 class="mb-8">Minhas Atividades</h2>
-                        <div class="grid grid-cols-2 gap-8" id="my-jobs-container">
-                            <!-- Joined jobs will be injected -->
-                        </div>
-                        <div id="empty-state" style="display: none; text-align: center; padding: 4rem; background: var(--white); border-radius: var(--r-lg); border: 1px dashed var(--border);">
-                            <h3 class="mb-2">Você ainda não se inscreveu em nenhuma vaga.</h3>
-                            <p class="mb-4" style="color: var(--text-muted);">Que tal começar agora?</p>
-                            <a href="/vagas.html" class="btn btn-primary">Ver Vagas Disponíveis</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <main class="container section">
+        <h1>Meu Perfil</h1>
+        <div id="my-jobs-container" class="grid grid-cols-2 gap-8 mt-8"></div>
     </main>
-
-    <footer class="footer">
-        <div class="container text-center" style="color: var(--text-light); font-size: 0.9rem;">
-            <p>&copy; 2024 Próximo Amor. Todos os direitos reservados.</p>
-        </div>
-    </footer>
-
-    <script type="module">
-        import { jobs } from './data.js';
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check auth
-            if (!localStorage.getItem('user_logged')) {
-                window.location.href = '/login.html';
-                return;
-            }
-
-            // Load joined jobs
-            const joinedIds = JSON.parse(localStorage.getItem('joined_jobs') || '[]');
-            const myJobs = jobs.filter(j => joinedIds.includes(j.id));
-            
-            const container = document.getElementById('my-jobs-container');
-            const emptyState = document.getElementById('empty-state');
-
-            if (myJobs.length === 0) {
-                emptyState.style.display = 'block';
-            } else {
-                container.innerHTML = myJobs.map(job => `
-                    <div class="card">
-                        <div class="badge badge-primary mb-4">${job.category}</div>
-                        <h3 class="mb-4">${job.title}</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">${job.location} | ${job.date}</p>
-                        <div class="flex justify-between items-center">
-                            <span style="color: var(--success); font-weight: 600; font-size: 0.85rem;">✅ Inscrito</span>
-                            <button class="btn btn-outline btn-sm" style="color: var(--error); border-color: var(--error);" onclick="cancelJoin(${job.id})">Cancelar</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            // Logout
-            document.getElementById('logout-btn').addEventListener('click', (e) => {
-                e.preventDefault();
-                if(confirm('Deseja realmente sair?')) {
-                    localStorage.removeItem('user_logged');
-                    window.location.href = '/';
-                }
-            });
-        });
-
-        window.cancelJoin = (id) => {
-            if(confirm('Deseja cancelar sua participação nesta vaga?')) {
-                let joinedIds = JSON.parse(localStorage.getItem('joined_jobs') || '[]');
-                joinedIds = joinedIds.filter(itemId => itemId !== id);
-                localStorage.setItem('joined_jobs', JSON.stringify(joinedIds));
-                window.location.reload();
-            }
-        };
-
-        // Mobile Menu
-        const toggle = document.getElementById('menu-toggle');
-        const menu = document.getElementById('nav-menu');
-        if (toggle && menu) {
-            toggle.addEventListener('click', () => {
-                menu.classList.toggle('active');
-            });
-        }
-    </script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>

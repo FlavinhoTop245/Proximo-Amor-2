@@ -538,9 +538,11 @@ body {
   font-size: 0.95rem;
 }
 
-.form-group input {
+.form-group input, .form-group select {
   padding: 0.8rem 1rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-dark);
   border-radius: 8px;
   outline: none;
   font-size: 1rem;
@@ -596,14 +598,14 @@ body {
 }
 
 .dropdown-menu {
-  background-color: white;
+  background-color: var(--card-bg);
   border-radius: 12px;
   box-shadow: var(--shadow-lg);
   min-width: 220px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(0,0,0,0.05);
+  border: 1px solid var(--border-color);
   animation: fadeIn 0.2s ease-out;
 }
 

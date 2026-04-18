@@ -49,10 +49,21 @@ const Navbar = () => {
         <div className="dropdown-container">
           <button 
             className="nav-item" 
-            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--text-dark)', fontWeight: 500 }}
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.35rem', 
+              color: '#0b1c3c', 
+              fontWeight: 600,
+              fontSize: '1rem',
+              padding: 0
+            }}
             onClick={() => setLanguage(language === 'pt-br' ? 'en' : language === 'en' ? 'es' : 'pt-br')}
           >
-            <Globe size={16} /> {language.toUpperCase()}
+            <Globe size={18} /> {language.toUpperCase()}
           </button>
         </div>
 

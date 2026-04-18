@@ -148,7 +148,7 @@ const OngDashboard = () => {
               <div className="metrics-grid">
                 <div className="metric-card">
                   <div className="metric-header">
-                    <h3>Horas Voluntariadas</h3>
+                    <h3>{t('ongContent.hours')}</h3>
                     <TrendingUp color="var(--azure-blue)" />
                   </div>
                   <p className="metric-value">342h</p>
@@ -156,7 +156,7 @@ const OngDashboard = () => {
                 </div>
                 <div className="metric-card">
                   <div className="metric-header">
-                    <h3>Voluntários Ativos</h3>
+                    <h3>{t('ongContent.totalVols')}</h3>
                     <Users color="var(--azure-blue)" />
                   </div>
                   <p className="metric-value">45</p>
@@ -164,7 +164,7 @@ const OngDashboard = () => {
                 </div>
                 <div className="metric-card">
                   <div className="metric-header">
-                    <h3>Vagas Abertas</h3>
+                    <h3>{t('ongContent.activeJobs')}</h3>
                     <Briefcase color="var(--navy-blue)" />
                   </div>
                   <p className="metric-value">4</p>
@@ -239,9 +239,9 @@ const OngDashboard = () => {
           {activeTab === 'vagas' && (
             <div className="fade-in">
               <div className="panel-header" style={{ borderBottom: 'none' }}>
-                <h2>Suas Vagas Ativas</h2>
+                <h2>{t('ongContent.manageRoles')}</h2>
                 <button className="btn-primary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                  <PlusCircle size={20} /> Criar Nova Vaga
+                  <PlusCircle size={20} /> {t('ongContent.addRole')}
                 </button>
               </div>
               <div className="vagas-list">
@@ -269,10 +269,10 @@ const OngDashboard = () => {
           {activeTab === 'voluntarios' && (
             <div className="fade-in">
               <div className="panel-header" style={{ marginBottom: '2rem', borderBottom: 'none' }}>
-                <h2 style={{ color: 'var(--navy-blue)' }}>Voluntários por Projeto</h2>
+                <h2 style={{ color: 'var(--navy-blue)' }}>{t('ongContent.manageVols')}</h2>
                 <div className="search-bar" style={{ width: '300px', background: 'white' }}>
                   <Search size={18} />
-                  <input type="text" placeholder="Buscar voluntário..." />
+                  <input type="text" placeholder={t('ongContent.searchVol')} />
                 </div>
               </div>
 
@@ -344,7 +344,7 @@ const OngDashboard = () => {
 
           {activeTab === 'relatorios' && (
             <div className="fade-in dash-panel">
-              <h3>Relatórios e Certificações</h3>
+              <h3>{t('ongContent.reportsAndCerts')}</h3>
               <p style={{ color: 'var(--text-gray)', marginBottom: '2rem' }}>Gere valor para seus voluntários e parceiros.</p>
               
               <div className="comms-grid">

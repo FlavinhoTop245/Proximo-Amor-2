@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Search, Phone, Video, MoreVertical, Paperclip } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const MOCK_DATA = {
   ong: [
@@ -51,6 +52,7 @@ const ChatMessenger = ({ userType = 'volunteer' }) => {
   const [activeChatId, setActiveChatId] = useState(contacts[0].id);
   const [inputText, setInputText] = useState('');
   const historyRef = useRef(null);
+  const { t } = useLanguage();
 
   const activeChat = contacts.find(c => c.id === activeChatId);
 
@@ -103,10 +105,10 @@ const ChatMessenger = ({ userType = 'volunteer' }) => {
       {/* Sidebar de contatos */}
       <div className="chat-sidebar">
         <div className="chat-sidebar-header">
-          <h3 style={{ margin: 0, color: 'var(--navy-blue)' }}>Mensagens</h3>
+          <h3 style={{ margin: 0, color: 'var(--navy-blue)' }}>{t('chat.title')}</h3>
           <div className="chat-search">
             <Search size={16} color="var(--text-gray)" />
-            <input type="text" placeholder="Buscar conversas..." />
+            <input type="text" placeholder={t('chat.searchHolder')} />
           </div>
         </div>
         <div className="contact-list">
@@ -167,7 +169,7 @@ const ChatMessenger = ({ userType = 'volunteer' }) => {
               <div className="chat-input-box">
                 <input 
                   type="text" 
-                  placeholder="Escreva uma mensagem..."
+                  placeholder={t('chat.write')}
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
@@ -180,7 +182,7 @@ const ChatMessenger = ({ userType = 'volunteer' }) => {
           </>
         ) : (
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-gray)' }}>
-            Selecione uma conversa para começar
+            {t('chat.empty')}
           </div>
         )}
       </div>

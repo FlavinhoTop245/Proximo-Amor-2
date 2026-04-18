@@ -271,7 +271,7 @@ const VolunteerDashboard = () => {
                 </div>
                 <div className="vol-hours-counter">
                   <span className="hours-number">127</span>
-                  <span className="hours-label">horas doadas</span>
+                  <span className="hours-label">{t('volProf.donatedHours')}</span>
                 </div>
               </div>
 
@@ -289,7 +289,7 @@ const VolunteerDashboard = () => {
 
               {/* History Timeline */}
               <div className="dash-panel" style={{ marginBottom: '1.5rem' }}>
-                <h3 className="panel-title">📜 Histórico de Causas</h3>
+                <h3 className="panel-title">{t('volProf.history')}</h3>
                 <div className="vol-timeline">
                   <div className="timeline-item">
                     <div className="timeline-dot active"></div>
@@ -320,7 +320,7 @@ const VolunteerDashboard = () => {
 
               {/* Testimonials */}
               <div className="dash-panel">
-                <h3 className="panel-title">💬 Depoimentos de ONGs</h3>
+                <h3 className="panel-title">{t('volProf.testimonials')}</h3>
                 <div className="vol-testimonials">
                   <div className="testimonial-card">
                     <p>"Lucas foi essencial na nossa campanha. Criou materiais incríveis e sempre esteve disponível!"</p>
@@ -349,15 +349,15 @@ const VolunteerDashboard = () => {
                 <div className="impact-text">
                   <Flame size={28} />
                   <div>
-                    <h3>Parabéns, Lucas! 🎉</h3>
-                    <p>Sua última ação ajudou <strong>12 crianças</strong> a terem aulas de reforço esta semana.</p>
+                    <h3>{t('volAchieve.congrats')}</h3>
+                    <p>{t('volAchieve.impactBanner')}</p>
                   </div>
                 </div>
               </div>
 
               {/* Badges */}
               <div className="dash-panel" style={{ marginBottom: '1.5rem' }}>
-                <h3 className="panel-title">🏅 Seus Selos</h3>
+                <h3 className="panel-title">{t('volAchieve.badges')}</h3>
                 <div className="badges-grid">
                   <div className="badge-card earned">
                     <Award size={36} color="#f59e0b" />
@@ -395,11 +395,11 @@ const VolunteerDashboard = () => {
 
               {/* Saved Vagas / Wishlist */}
               <div className="dash-panel">
-                <h3 className="panel-title">📌 Minha Lista de Desejos</h3>
+                <h3 className="panel-title">{t('volAchieve.wishlist')}</h3>
                 {savedVagas.length === 0 ? (
                   <div className="empty-state" style={{ padding: '2rem' }}>
                     <Bookmark size={36} color="#cbd5e1" />
-                    <p>Você ainda não salvou nenhuma vaga. Vá para "Descobrir Vagas" e clique no ícone de salvar! </p>
+                    <p>{t('volAchieve.emptyWishlist')}</p>
                   </div>
                 ) : (
                   <ul className="wishlist">
@@ -423,7 +423,7 @@ const VolunteerDashboard = () => {
             <div className="fade-in">
               {/* Forum */}
               <div className="dash-panel" style={{ marginBottom: '1.5rem' }}>
-                <h3 className="panel-title">💬 Fórum de Voluntários</h3>
+                <h3 className="panel-title">{t('volComm.forum')}</h3>
                 <div className="forum-list">
                   <div className="forum-post">
                     <div className="forum-avatar">MS</div>

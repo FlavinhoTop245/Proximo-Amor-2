@@ -26,8 +26,10 @@ const OngDashboard = () => {
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add('dark-theme');
+      localStorage.setItem('theme', 'dark');
     } else {
       document.body.classList.remove('dark-theme');
+      localStorage.setItem('theme', 'light');
     }
   }, [isDarkMode]);
 
@@ -412,6 +414,30 @@ const OngDashboard = () => {
                       transition: 'left 0.3s ease'
                     }}></div>
                   </button>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <div>
+                    <h4 style={{ fontWeight: 600 }}>Tamanho da Fonte</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>Aumentar tamanho do texto visando acessibilidade.</p>
+                  </div>
+                  <select style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--card-bg)', color: 'var(--text-dark)' }}>
+                    <option value="normal">Normal</option>
+                    <option value="large">Grande</option>
+                    <option value="xlarge">Extra Grande</option>
+                  </select>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <div>
+                    <h4 style={{ fontWeight: 600 }}>Idioma do Aplicativo</h4>
+                    <p style={{ color: 'var(--text-gray)', fontSize: '0.9rem' }}>Escolha a linguagem principal da interface.</p>
+                  </div>
+                  <select style={{ padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--card-bg)', color: 'var(--text-dark)' }}>
+                    <option value="pt-br">Português (Brasil)</option>
+                    <option value="en">English (US)</option>
+                    <option value="es">Español</option>
+                  </select>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>

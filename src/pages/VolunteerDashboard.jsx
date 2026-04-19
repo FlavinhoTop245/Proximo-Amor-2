@@ -321,6 +321,10 @@ const VolunteerDashboard = () => {
               {/* Forum */}
               <div className="dash-panel" style={{ marginBottom: '1.5rem' }}>
                 <h3 className="panel-title">{t('volComm.forum')}</h3>
+                <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '1.5rem' }}>
+                  <input type="text" placeholder="Compartilhe algo com os outros voluntários..." style={{ flex: 1, padding: '0.8rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--card-bg)', color: 'var(--text-dark)' }} />
+                  <button className="btn-primary" style={{ padding: '0 1.5rem', flexShrink: 0, borderRadius: '8px' }}>Publicar</button>
+                </div>
                 <div className="empty-state" style={{ padding: '2rem' }}>
                   <MessageCircle size={36} color="#cbd5e1" />
                   <p>{t('volComm.emptyForum')}</p>

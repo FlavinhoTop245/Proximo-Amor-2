@@ -13,20 +13,34 @@ const ChatMessenger = ({ userType = 'volunteer' }) => {
   const historyRef = useRef(null);
   const { t } = useLanguage();
 
-  // 1. Carregar contatos (busca perfis que não são o meu)
+  // 1. Carregar contatos (busca apenas quem você já tem histórico de conversa, estilo WhatsApp)
   useEffect(() => {
     const fetchContacts = async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .neq('id', profile?.id) // Não listar a si mesmo
-        .eq('role', userType === 'volunteer' ? 'ong' : 'voluntario'); // Se sou vol, busco ongs
+      // Primeiro pega as mensagens onde o usuário atual enviou ou recebeu
+      const { data: msgs, error: msgError } = await supabase
+        .from('messages')
+        .select('sender_id, receiver_id')
+        .or(`sender_id.eq.${profile?.id},receiver_id.eq.${profile?.id}`);
 
-      if (!error) setContacts(data);
+      if (!msgError && msgs) {
+        // Extrai apenas os IDs dos outros usuários (tirando o próprio ID do usuário atual)
+        const contactIds = [...new Set(msgs.map(m => m.sender_id === profile.id ? m.receiver_id : m.sender_id))];
+        
+        if (contactIds.length > 0) {
+          // Busca os dados desses perfis específicos
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .in('id', contactIds);
+          if (!error) setContacts(data);
+        } else {
+          setContacts([]);
+        }
+      }
     };
 
     if (profile) fetchContacts();
-  }, [profile, userType]);
+  }, [profile]);
 
   // 2. Carregar mensagens quando um chat é selecionado
   useEffect(() => {
@@ -132,9 +146,7 @@ const ChatMessenger = ({ userType = 'volunteer' }) => {
                 </div>
               </div>
               <div className="chat-header-actions">
-                <Phone size={20} style={{ cursor: 'pointer' }} />
-                <Video size={20} style={{ cursor: 'pointer' }} />
-                <MoreVertical size={20} style={{ cursor: 'pointer' }} />
+                {/* Ícones removidos para manter apenas funcionalidades ativas */}
               </div>
             </div>
 
@@ -150,8 +162,7 @@ const ChatMessenger = ({ userType = 'volunteer' }) => {
             </div>
 
             <div className="chat-input-area">
-              <Paperclip size={22} color="var(--text-gray)" style={{ cursor: 'pointer' }} />
-              <div className="chat-input-box">
+              <div className="chat-input-box" style={{ marginLeft: 0 }}>
                 <input 
                   type="text" 
                   placeholder={t('chat.write')}

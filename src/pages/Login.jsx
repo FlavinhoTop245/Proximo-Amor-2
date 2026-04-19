@@ -87,29 +87,6 @@ const Login = () => {
             {loading ? 'Carregando...' : t('auth.enter')}
           </button>
           
-          <div style={{ margin: '1.5rem 0', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
-            <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>{t('auth.orTest')}</span>
-            <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
-          </div>
- 
-          <Link to="/" className="btn-primary" style={{ 
-            width: '100%', 
-            textAlign: 'center', 
-            background: 'var(--navy-blue)', 
-            boxShadow: 'none' 
-          }}>
-            {t('auth.asOng')} (Demo)
-          </Link>
-          <Link to="/" className="btn-primary" style={{ 
-            width: '100%', 
-            textAlign: 'center', 
-            background: '#10b981', 
-            boxShadow: 'none',
-            marginTop: '0.75rem'
-          }}>
-            {t('auth.asVol')} (Demo)
-          </Link>
         </form>
         
         <p className="auth-footer">

@@ -20,6 +20,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getMapsUrl, getCalendarUrl } from '../utils';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../supabase';
 import ChatMessenger from '../components/ChatMessenger';
 
 const OngDashboard = () => {
@@ -43,10 +44,23 @@ const OngDashboard = () => {
   const [newJobTimeEnd, setNewJobTimeEnd] = useState('');
   const [newJobLocation, setNewJobLocation] = useState('');
   const [newJobDesc, setNewJobDesc] = useState('');
+  const [newJobHours, setNewJobHours] = useState('4');
 
-  const [myRoles, setMyRoles] = useState([
-    { id: 1, title: 'Professor Voluntário de Matemática', category: 'Educação', date: 'Remoto', time: '', location: '', desc: '', subscribers: 12, exp: '5 dias' }
-  ]);
+  const [myRoles, setMyRoles] = useState([]);
+
+  // Carregar vagas reais da ONG logada
+  useEffect(() => {
+    const fetchMyJobs = async () => {
+      if (!profile) return;
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('ong_id', profile.id)
+        .order('created_at', { ascending: false });
+      if (!error) setMyRoles(data || []);
+    };
+    fetchMyJobs();
+  }, [profile]);
 
   const handleLocationBlur = async (e) => {
     const cepOnlyNumbers = e.target.value.replace(/\D/g, '');
@@ -80,56 +94,7 @@ const OngDashboard = () => {
     }
   }, [isDarkMode]);
 
-  const projects = [
-    {
-      id: 1,
-      title: 'Professor Voluntário de Matemática',
-      category: 'Educação',
-      modality: 'Remoto',
-      location: 'Online (Zoom)',
-      date: '20260425T140000Z',
-      endDate: '20260425T170000Z',
-      fullDate: '18 Out 2025 — 14:00',
-      volunteerCount: 2,
-      description: 'Aulas de reforço para jovens da periferia.',
-      volunteers: [
-        { name: 'Ana Beatriz', skills: 'Matemática, Didática', status: 'active', statusLabel: 'Ativo', rating: '⭐⭐⭐⭐⭐' },
-        { name: 'João Pedro', skills: 'Exatas, Comunicação', status: 'pending', statusLabel: 'Pendente', rating: '-' },
-      ]
-    },
-    {
-      id: 2,
-      title: 'Mutirão de Limpeza do Parque',
-      category: 'Meio Ambiente',
-      modality: 'Presencial',
-      location: 'Parque da Cidade — Curitiba, PR',
-      date: '20260420T080000Z',
-      endDate: '20260420T120000Z',
-      fullDate: '20 Out 2025 — 08:00',
-      volunteerCount: 1,
-      description: 'Limpeza e coleta seletiva no parque local.',
-      volunteers: [
-        { name: 'Carlos Silva', skills: 'Logística, Trabalho em equipe', status: 'active', statusLabel: 'Ativo', rating: '⭐⭐⭐⭐' },
-      ]
-    },
-    {
-      id: 3,
-      title: 'Apoio a Idosos no Centro Comunitário',
-      category: 'Saúde',
-      modality: 'Presencial',
-      location: 'Centro Comunitário Vila Nova — Rio de Janeiro, RJ',
-      date: '20260425T090000Z',
-      endDate: '20260425T160000Z',
-      fullDate: '25 Out 2025 — 09:00',
-      volunteerCount: 3,
-      description: 'Acompanhamento e atividades recreativas com idosos.',
-      volunteers: [
-        { name: 'Maria Luísa', skills: 'Enfermagem, Empatia', status: 'active', statusLabel: 'Ativo', rating: '⭐⭐⭐⭐⭐' },
-        { name: 'Fernando Souza', skills: 'Fisioterapia', status: 'active', statusLabel: 'Ativo', rating: '⭐⭐⭐⭐' },
-        { name: 'Larissa Costa', skills: 'Psicologia', status: 'pending', statusLabel: 'Pendente', rating: '-' },
-      ]
-    }
-  ];
+  const projects = [];
 
   return (
     <div className="dashboard-layout">
@@ -196,24 +161,24 @@ const OngDashboard = () => {
                     <h3>{t('ongContent.hours')}</h3>
                     <TrendingUp color="var(--azure-blue)" />
                   </div>
-                  <p className="metric-value">342h</p>
-                  <span className="metric-trend positive">+12% este mês</span>
+                  <p className="metric-value">0h</p>
+                  <span className="metric-trend">Nenhuma hora registrada ainda</span>
                 </div>
                 <div className="metric-card">
                   <div className="metric-header">
                     <h3>{t('ongContent.totalVols')}</h3>
                     <Users color="var(--azure-blue)" />
                   </div>
-                  <p className="metric-value">45</p>
-                  <span className="metric-trend positive">+5 inscritos na semana</span>
+                  <p className="metric-value">0</p>
+                  <span className="metric-trend">Publique vagas para atrair voluntários</span>
                 </div>
                 <div className="metric-card">
                   <div className="metric-header">
                     <h3>{t('ongContent.activeJobs')}</h3>
                     <Briefcase color="var(--navy-blue)" />
                   </div>
-                  <p className="metric-value">4</p>
-                  <span className="metric-trend">Normal</span>
+                  <p className="metric-value">{myRoles.length}</p>
+                  <span className="metric-trend">{myRoles.length === 0 ? 'Crie sua primeira vaga' : 'Ativas'}</span>
                 </div>
               </div>
 
@@ -221,61 +186,22 @@ const OngDashboard = () => {
               <div className="dashboard-grid-2">
                 <div className="dash-panel">
                   <div className="panel-header">
-                    <h3><AlertCircle size={20} color="#eab308" /> Alertas de Urgência</h3>
+                    <h3><AlertCircle size={20} color="#eab308" /> Alertas</h3>
                   </div>
-                  <ul className="alert-list">
-                    <li className="alert-item warning">
-                      <strong>Vaga Expirando:</strong> "Professor de Matemática" encerra em 2 dias com apenas 1 inscrito.
-                    </li>
-                    <li className="alert-item info">
-                      <strong>Novas Inscrições:</strong> 3 pessoas se candidataram para "Apoio a Idosos".
-                    </li>
-                  </ul>
+                  <div className="empty-state" style={{ padding: '2rem' }}>
+                    <AlertCircle size={36} color="#cbd5e1" />
+                    <p>Nenhum alerta no momento. Tudo tranquilo!</p>
+                  </div>
                 </div>
                 
                 <div className="dash-panel">
                   <div className="panel-header">
                     <h3><Calendar size={20} color="var(--navy-blue)" /> Próximos Eventos</h3>
                   </div>
-                  <ul className="event-list">
-                    {projects.slice(0, 2).map(proj => (
-                      <li key={proj.id} className="event-item">
-                        <div className="event-date"><span>{proj.date.substring(6, 8)}</span> Abr</div>
-                        <div className="event-details">
-                          <h4>{proj.title}</h4>
-                          <p>{proj.modality === 'Remoto' ? 'Online' : proj.location.split('—')[0]}</p>
-                          <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
-                            <a 
-                              href={getCalendarUrl({
-                                title: proj.title,
-                                description: proj.description,
-                                location: proj.location,
-                                startDate: proj.date,
-                                endDate: proj.endDate
-                              })}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="detail-link"
-                              style={{ fontSize: '0.75rem' }}
-                            >
-                              <Calendar size={12} /> Agenda
-                            </a>
-                            {proj.modality !== 'Remoto' && (
-                              <a 
-                                href={getMapsUrl(proj.location)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="detail-link"
-                                style={{ fontSize: '0.75rem' }}
-                              >
-                                <MapPin size={12} /> GPS
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="empty-state" style={{ padding: '2rem' }}>
+                    <Calendar size={36} color="#cbd5e1" />
+                    <p>Crie vagas para ver seus eventos aqui.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -290,25 +216,28 @@ const OngDashboard = () => {
                 </button>
               </div>
               <div className="vagas-list">
-                {myRoles.map(role => (
-                  <div key={role.id} className="vaga-card-admin fade-in">
-                    <div className="vaga-info">
-                      <h3>{role.title}</h3>
-                      <div className="vaga-tags">
-                        <span className={`tag ${role.category === 'Educação' ? 'blue' : role.category === 'Saúde' ? 'green' : 'gray'}`}>{role.category}</span>
-                        <span className="tag gray">{role.date || 'Sem data'} {role.time}</span>
+                {myRoles.length === 0 ? (
+                  <div className="empty-state" style={{ padding: '2rem' }}>
+                    <Briefcase size={36} color="#cbd5e1" />
+                    <p>Você ainda não criou nenhuma vaga. Clique em "Criar Nova Vaga" acima!</p>
+                  </div>
+                ) : (
+                  myRoles.map(role => (
+                    <div key={role.id} className="vaga-card-admin fade-in">
+                      <div className="vaga-info">
+                        <h3>{role.title}</h3>
+                        <div className="vaga-tags">
+                          <span className={`tag ${role.category === 'Educação' ? 'blue' : role.category === 'Saúde' ? 'green' : 'gray'}`}>{role.category}</span>
+                          <span className="tag gray">{role.location || 'Sem local'}</span>
+                        </div>
+                      </div>
+                      <div className="vaga-stats">
+                        <p>Status: <strong>{role.status}</strong></p>
+                        <p>{role.hours_each}h por participação</p>
                       </div>
                     </div>
-                    <div className="vaga-stats">
-                      <p><strong>{role.subscribers}</strong> Inscritos</p>
-                      <p>Expira em: <strong>{role.exp}</strong></p>
-                    </div>
-                    <div className="vaga-actions">
-                      <button className="btn-outline">Editar Vaga</button>
-                      <button className="btn-outline">Ver Triagem</button>
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           )}
@@ -324,63 +253,14 @@ const OngDashboard = () => {
               </div>
 
               <div className="project-cards-list">
-                {projects.map(proj => (
-                  <details key={proj.id} className="project-flashcard">
-                    <summary className="flashcard-summary">
-                      <div className="flashcard-left">
-                        <h3>{proj.title}</h3>
-                        <div className="flashcard-meta">
-                          <span className="flashcard-detail">📍 {proj.location}</span>
-                          <span className="flashcard-detail">📅 {proj.fullDate}</span>
-                          <span className="flashcard-detail">💻 {proj.modality}</span>
-                        </div>
-                      </div>
-                      <div className="flashcard-right">
-                        <span className={`tag ${proj.category === 'Educação' ? 'blue' : proj.category === 'Saúde' ? 'green' : 'gray'}`}>{proj.category}</span>
-                        <span className="volunteer-count">{proj.volunteerCount} voluntário{proj.volunteerCount > 1 ? 's' : ''}</span>
-                      </div>
-                    </summary>
-                    <div className="flashcard-body">
-                      {/* Quick Actions for Project */}
-                      <div style={{ display: 'flex', gap: '1rem', padding: '1rem 0', borderBottom: '1px solid #f1f5f9', marginBottom: '1rem' }}>
-                        <a href={getCalendarUrl({ title: proj.title, description: proj.description, location: proj.location, startDate: proj.date, endDate: proj.endDate })} target="_blank" rel="noopener noreferrer" className="btn-outline" style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <Calendar size={16} /> Ver na Agenda
-                        </a>
-                        {proj.modality !== 'Remoto' && (
-                          <a href={getMapsUrl(proj.location)} target="_blank" rel="noopener noreferrer" className="btn-outline" style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <MapPin size={16} /> Abrir no GPS
-                          </a>
-                        )}
-                        <button className="btn-outline" style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <ExternalLink size={16} /> Compartilhar Link
-                        </button>
-                      </div>
-
-                      <table className="volunteers-table">
-                        <thead>
-                          <tr>
-                            <th>Nome</th>
-                            <th>Habilidades</th>
-                            <th>Status</th>
-                            <th>Avaliação</th>
-                            <th>Ações</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {proj.volunteers.map((vol, i) => (
-                            <tr key={i}>
-                              <td>{vol.name}</td>
-                              <td>{vol.skills}</td>
-                              <td><span className={`status-badge ${vol.status}`}>{vol.statusLabel}</span></td>
-                              <td>{vol.rating}</td>
-                              <td><button className="btn-text">{vol.status === 'pending' ? 'Analisar' : 'Ver Perfil'}</button></td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </details>
-                ))}
+                {myRoles.length === 0 ? (
+                  <div className="empty-state" style={{ padding: '2rem' }}>
+                    <Users size={36} color="#cbd5e1" />
+                    <p>Nenhum voluntário inscrito ainda. Crie vagas para começar a receber candidaturas.</p>
+                  </div>
+                ) : (
+                  <p style={{ color: 'var(--text-gray)', padding: '1rem' }}>Os voluntários inscritos nas suas vagas aparecerão aqui.</p>
+                )}
               </div>
             </div>
           )}
@@ -597,32 +477,51 @@ const OngDashboard = () => {
               <button 
                 className="btn-primary" 
                 style={{ width: '100%', padding: '1rem' }}
-                onClick={() => {
+                onClick={async () => {
                   if(!newJobTitle.trim()) {
                     alert("Preencha o título da vaga.");
                     return;
                   }
-                  // Gera a nova vaga no painel (mock)
-                  const newRole = {
-                    id: Date.now(),
-                    title: newJobTitle,
-                    category: newJobCategory,
-                    date: newJobDate,
-                    time: newJobTime,
-                    location: newJobLocation,
-                    desc: newJobDesc,
-                    subscribers: 0,
-                    exp: '30 dias'
-                  };
-                  setMyRoles([newRole, ...myRoles]);
+                  if(!profile) {
+                    alert("Erro: perfil não carregado.");
+                    return;
+                  }
+                  
+                  // Calcular horas entre início e fim
+                  let hours = parseInt(newJobHours) || 4;
+                  
+                  // Salvar direto no Supabase
+                  const { data, error } = await supabase
+                    .from('jobs')
+                    .insert([{
+                      ong_id: profile.id,
+                      title: newJobTitle,
+                      description: newJobDesc,
+                      location: newJobLocation,
+                      category: newJobCategory,
+                      hours_each: hours,
+                      status: 'aberta'
+                    }])
+                    .select();
+                  
+                  if (error) {
+                    alert("Erro ao criar vaga: " + error.message);
+                    return;
+                  }
+                  
+                  // Adicionar na lista local
+                  if (data) setMyRoles([data[0], ...myRoles]);
                   
                   // Limpando inputs e fechando modal
                   setNewJobTitle('');
                   setNewJobDate('');
                   setNewJobTime('');
+                  setNewJobTimeEnd('');
                   setNewJobLocation('');
                   setNewJobDesc('');
+                  setNewJobHours('4');
                   setIsCreatingJob(false);
+                  alert('✅ Vaga publicada com sucesso! Ela já está visível para os voluntários.');
                 }}
               >
                 Publicar Vaga

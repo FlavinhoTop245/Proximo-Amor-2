@@ -86,6 +86,13 @@ const OngDashboard = () => {
     }
   };
 
+  const isActionConcluded = (jobDate, jobTimeEnd) => {
+    if (!jobDate) return true; // Se não tem data, permite (vagas antigas)
+    const now = new Date();
+    const actionDate = new Date(jobDate + 'T' + (jobTimeEnd || '23:59') + ':00');
+    return now > actionDate;
+  };
+
   const handleLocationBlur = async (e) => {
     const cepOnlyNumbers = e.target.value.replace(/\D/g, '');
     if (cepOnlyNumbers.length === 8) {
@@ -304,9 +311,19 @@ const OngDashboard = () => {
                           </td>
                           <td style={{ padding: '1rem', textAlign: 'center' }}>
                             {!vol.confirmed_by_ong ? (
-                              <button className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }} onClick={() => confirmPresence(vol.id)}>
-                                Confirmar Presença
-                              </button>
+                              isActionConcluded(vol.jobs?.date, vol.jobs?.time_end) ? (
+                                <button 
+                                  className="btn-primary" 
+                                  style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }} 
+                                  onClick={() => confirmPresence(vol.id)}
+                                >
+                                  Confirmar Presença
+                                </button>
+                              ) : (
+                                <span style={{ color: '#94a3b8', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem', justifyContent: 'center' }}>
+                                  <AlertCircle size={14} /> Aguarde a conclusão
+                                </span>
+                              )
                             ) : (
                               <span style={{ color: '#10b981', fontWeight: '500' }}>Horas creditadas</span>
                             )}

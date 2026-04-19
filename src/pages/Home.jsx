@@ -10,7 +10,7 @@ const Home = () => {
         position: 'relative',
         padding: '8rem 1rem',
         textAlign: 'center',
-        background: 'linear-gradient(rgba(10, 25, 47, 0.75), rgba(10, 25, 47, 0.9)), url(/hero_background.png) center/cover no-repeat',
+        background: 'linear-gradient(rgba(10, 25, 47, 0.75), rgba(10, 25, 47, 0.9)), url(./hero_background.png) center/cover no-repeat',
         marginBottom: '4rem',
       }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 2 }}>

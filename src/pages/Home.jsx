@@ -10,7 +10,7 @@ const Home = () => {
         position: 'relative',
         padding: '8rem 1rem',
         textAlign: 'center',
-        background: 'linear-gradient(rgba(10, 25, 47, 0.75), rgba(10, 25, 47, 0.9)), url(/hero_background_1776454304976.png) center/cover no-repeat',
+        background: 'linear-gradient(rgba(10, 25, 47, 0.75), rgba(10, 25, 47, 0.9)), url(/hero_background.png) center/cover no-repeat',
         marginBottom: '4rem',
       }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
@@ -61,14 +61,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Hero Banner Bottom */}
-      <section style={{ background: 'var(--navy-blue)', padding: '5rem 1rem', textAlign: 'center', color: 'white' }}>
-        <h2 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', fontWeight: 800 }}>O Próximo Amor Começa com Você</h2>
-        <p style={{ fontSize: '1.2rem', color: '#cbd5e1', maxWidth: '600px', margin: '0 auto 2.5rem' }}>Junte-se a milhares de voluntários e ONGs que já estão fazendo a diferença diariamente na nossa plataforma.</p>
-        <Link to="/cadastro" className="btn-primary" style={{ background: 'white', color: 'var(--navy-blue)', padding: '1rem 3rem', fontSize: '1.2rem', fontWeight: 700, borderRadius: '40px' }}>
-          Começar Gratuitamente
-        </Link>
-      </section>
     </div>
   );
 };

@@ -32,6 +32,8 @@ export const LanguageProvider = ({ children }) => {
         'auth.enter': 'Entrar',
         'auth.noAccount': 'Não tem uma conta?',
         'auth.signup': 'Cadastre-se',
+        'about.title': 'Sobre o Próximo Amor',
+        'about.description': 'Somos uma iniciativa privada com o objetivo de conectar pessoas que desejam participar de pequenas causas que geram grandes impactos. Somos representados por uma árvore, símbolo da conexão entre todos. Nela, o tronco representa o Próximo Amor, os galhos são as empresas cadastradas e as folhas simbolizam os usuários dispostos a promover mudanças. O projeto nasceu da vontade de gerar transformações sociais, incentivando a solidariedade e o engajamento coletivo. Nossa missão é conectar pessoas dispostas a ajudar com empresas parceiras inscritas em nosso programa. Em nosso site, empresas e voluntários se encontram por meio de vagas selecionadas, facilitando essa conexão. Acreditamos na mudança e na solidariedade. Junte-se a nós e faça parte dessa grande família.',
       },
       'en': {
         'nav.home': 'Home',
@@ -58,6 +60,8 @@ export const LanguageProvider = ({ children }) => {
         'auth.enter': 'Sign In',
         'auth.noAccount': "Don't have an account?",
         'auth.signup': 'Sign Up',
+        'about.title': 'About Próximo Amor',
+        'about.description': 'We are a private initiative with the goal of connecting people who want to participate in small causes that generate great impacts. We are represented by a tree, a symbol of the connection between all. In it, the trunk represents Próximo Amor, the branches are the registered companies, and the leaves symbolize the users willing to promote change. The project was born from the desire to generate social transformations, encouraging solidarity and collective engagement. Our mission is to connect people willing to help with partner companies enrolled in our program. On our website, companies and volunteers meet through selected vacancies, facilitating this connection. We believe in change and solidarity. Join us and be part of this great family.',
       },
       'es': {
         'nav.home': 'Inicio',
@@ -84,6 +88,8 @@ export const LanguageProvider = ({ children }) => {
         'auth.enter': 'Entrar',
         'auth.noAccount': '¿No tienes una cuenta?',
         'auth.signup': 'Regístrate',
+        'about.title': 'Sobre Próximo Amor',
+        'about.description': 'Somos una iniciativa privada con el objetivo de conectar personas que desean participar en pequeñas causas que generan impactos significativos. Estamos representados por un árbol, símbolo de la conexión entre todos. En él, el tronco representa al Próximo Amor, las ramas son las empresas registradas y las hojas simbolizan a los usuarios dispuestos a promover cambios. El proyecto nació del deseo de generar transformaciones sociales, fomentando la solidaridad y el compromiso colectivo. Nuestra misión es conectar a personas dispuestas a ayudar con empresas asociadas inscritas en nuestro programa. En nuestro sitio, empresas y voluntarios se encuentran a través de vacantes seleccionadas, facilitando esta conexión. Creemos en el cambio y la solidaridad. Únete a nosotros y forma parte de esta gran familia.',
       }
     };
     return dicts[language]?.[key] || dicts['pt-br'][key] || key;

@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Heart } from 'lucide-react';
+import { Heart, Globe } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Navbar = () => {
   const location = useLocation();
+  const { language, setLanguage, t } = useLanguage();
 
   const navItemStyle = (path) => ({
     textDecoration: 'none',
@@ -31,11 +33,34 @@ const Navbar = () => {
       </Link>
 
       <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-        <Link to="/" style={navItemStyle('/')}>Início</Link>
-        <Link to="/sobre" style={navItemStyle('/sobre')}>Sobre Nós</Link>
+        <Link to="/" style={navItemStyle('/')}>{t('nav.home')}</Link>
+        <Link to="/sobre" style={navItemStyle('/sobre')}>{t('nav.about')}</Link>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '1rem', padding: '0.4rem 0.8rem', background: '#f8fafc', borderRadius: '40px', border: '1px solid #e2e8f0' }}>
+          <Globe size={16} color="#64748b" />
+          <select 
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            style={{ 
+              border: 'none', 
+              background: 'transparent', 
+              fontSize: '0.85rem', 
+              fontWeight: 600, 
+              color: '#475569', 
+              outline: 'none', 
+              cursor: 'pointer',
+              textTransform: 'uppercase'
+            }}
+          >
+            <option value="pt-br">PT</option>
+            <option value="en">EN</option>
+            <option value="es">ES</option>
+          </select>
+        </div>
+
         <div style={{ height: '24px', width: '1px', background: '#e2e8f0' }}></div>
-        <Link to="/login" style={{ ...navItemStyle('/login'), color: 'var(--text-gray)', fontWeight: 600 }}>Entrar</Link>
-        <Link to="/cadastro" className="btn-primary" style={{ padding: '0.7rem 1.5rem', borderRadius: '40px', fontWeight: 600, fontSize: '0.95rem' }}>Criar Conta</Link>
+        <Link to="/login" style={{ ...navItemStyle('/login'), color: 'var(--text-gray)', fontWeight: 600 }}>{t('nav.login')}</Link>
+        <Link to="/cadastro" className="btn-primary" style={{ padding: '0.7rem 1.5rem', borderRadius: '40px', fontWeight: 600, fontSize: '0.95rem' }}>{t('nav.register')}</Link>
       </div>
     </nav>
   );

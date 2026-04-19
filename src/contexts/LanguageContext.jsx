@@ -98,6 +98,16 @@ export const LanguageProvider = ({ children }) => {
       'ongContent.manageVols': 'Gestão de Voluntários',
       'ongContent.searchVol': 'Buscar voluntário...',
       'ongContent.reportsAndCerts': 'Relatórios e Certificados',
+      'home.heroTitle': 'Conectando Corações ao Voluntariado',
+      'home.heroSub': 'A maior plataforma do Brasil unindo ONGs que precisam de apoio a voluntários apaixonados. Junte-se a nós para transformar vidas e realidades.',
+      'home.heroBtn': 'Quero Fazer a Diferença',
+      'home.howItWorks': 'Como Funciona?',
+      'home.step1Title': 'Crie seu Perfil',
+      'home.step1Desc': 'Cadastre-se como voluntário e mostre suas habilidades, ou como ONG para buscar ajuda especializada.',
+      'home.step2Title': 'Encontre Causas',
+      'home.step2Desc': 'Explore vagas com base na sua localização, disponibilidade de tempo e interesses pessoais.',
+      'home.step3Title': 'Faça o Bem',
+      'home.step3Desc': 'Conecte-se com segurança, dedique seu tempo e ajude a transformar a vida de milhares de pessoas.',
     };
     return translations[key] || key;
   };

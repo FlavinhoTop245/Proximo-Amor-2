@@ -500,6 +500,9 @@ const OngDashboard = () => {
                       location: newJobLocation,
                       category: newJobCategory,
                       hours_each: hours,
+                      date: newJobDate || null,
+                      time: newJobTime || null,
+                      time_end: newJobTimeEnd || null,
                       status: 'aberta'
                     }])
                     .select();
@@ -535,4 +538,3 @@ const OngDashboard = () => {
 };
 
 export default OngDashboard;
-// Versão estável - Force Refresh

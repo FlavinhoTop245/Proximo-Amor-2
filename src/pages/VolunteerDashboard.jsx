@@ -73,7 +73,29 @@ const VolunteerDashboard = () => {
         .from('jobs')
         .select('*, profiles(full_name)')
         .eq('status', 'aberta');
-      if (!error) setAllVagas(data || []);
+      if (!error && data) {
+        const mapped = data.map(job => {
+          // Formatar data para exibição
+          let fullDate = 'Data a confirmar';
+          if (job.date) {
+            try {
+              const d = new Date(job.date + 'T00:00:00');
+              fullDate = d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+              if (job.time) fullDate += ` — ${job.time}`;
+              if (job.time_end) fullDate += ` às ${job.time_end}`;
+            } catch(e) { /* ignora erro de parsing */ }
+          }
+          return {
+            ...job,
+            org: job.profiles?.full_name || 'ONG',
+            image: `https://picsum.photos/seed/${job.id}/400/200`,
+            modality: job.location ? 'Presencial' : 'Remoto',
+            fullDate,
+            location: job.location || 'Remoto / Online',
+          };
+        });
+        setAllVagas(mapped);
+      }
     };
     fetchJobs();
   }, []);
@@ -671,7 +693,29 @@ const VolunteerDashboard = () => {
             </div>
             <div className="modal-footer">
               <button className="btn-outline" style={{ flex: 1 }} onClick={() => setSelectedVaga(null)}>Voltar</button>
-              <button className="btn-primary" style={{ flex: 2 }}>Quero me candidatar</button>
+              <button 
+                className="btn-primary" 
+                style={{ flex: 2 }}
+                onClick={async () => {
+                  if (!profile) return;
+                  const { error } = await supabase
+                    .from('participations')
+                    .insert([{
+                      volunteer_id: profile.id,
+                      job_id: selectedVaga.id
+                    }]);
+                  if (!error) {
+                    alert('Inscrição confirmada com sucesso! A ONG foi notificada.');
+                    setSelectedVaga(null);
+                  } else if (error.code === '23505') {
+                    alert('Você já está inscrito nesta vaga!');
+                  } else {
+                    alert('Erro ao se inscrever: ' + error.message);
+                  }
+                }}
+              >
+                Quero me candidatar
+              </button>
             </div>
           </div>
         </div>

@@ -41,10 +41,42 @@ const VolunteerDashboard = () => {
   const [activeFilter, setActiveFilter] = useState('todos');
   const [savedVagas, setSavedVagas] = useState([]);
   const [selectedVaga, setSelectedVaga] = useState(null);
+  const [allVagas, setAllVagas] = useState([]); // Vagas do banco
+  const [totalHours, setTotalHours] = useState(0); // Horas reais confirmadas
   const [isDarkMode, setIsDarkMode] = useState(() => document.body.classList.contains('dark-theme'));
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [forumPosts, setForumPosts] = useState([]);
   const [forumInput, setForumInput] = useState('');
+
+  // 1. Carregar Horas Confirmadas do Voluntário
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (!profile) return;
+      const { data, error } = await supabase
+        .from('participations')
+        .select(`confirmed_by_ong, jobs (hours_each)`)
+        .eq('volunteer_id', profile.id)
+        .eq('confirmed_by_ong', true);
+      
+      if (!error && data) {
+        const sum = data.reduce((acc, curr) => acc + (curr.jobs?.hours_each || 0), 0);
+        setTotalHours(sum);
+      }
+    };
+    fetchStats();
+  }, [profile]);
+
+  // 2. Carregar Vagas Reais do Banco
+  useEffect(() => {
+    const fetchJobs = async () => {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*, profiles(full_name)')
+        .eq('status', 'aberta');
+      if (!error) setAllVagas(data || []);
+    };
+    fetchJobs();
+  }, []);
 
   const handleLogout = async () => {
     await signOut();
@@ -257,7 +289,7 @@ const VolunteerDashboard = () => {
                   <p>{profile?.skills || 'Adicione suas habilidades nas configurações'}</p>
                 </div>
                 <div className="vol-hours-counter">
-                  <span className="hours-number">0</span>
+                  <span className="hours-number">{totalHours}</span>
                   <span className="hours-label">{t('volProf.donatedHours')}</span>
                 </div>
               </div>
@@ -296,18 +328,28 @@ const VolunteerDashboard = () => {
                 </div>
               </div>
 
-              {/* Badges - All Locked for new user */}
+              {/* Badges - Desbloqueio Automático */}
               <div className="dash-panel" style={{ marginBottom: '1.5rem' }}>
                 <h3 className="panel-title">{t('volAchieve.badges')}</h3>
                 <div className="badges-grid">
-                  <div className="badge-card locked">
-                    <Award size={36} />
+                  <div className={`badge-card ${totalHours >= 50 ? 'earned' : 'locked'}`}>
+                    <Award size={36} color={totalHours >= 50 ? '#f59e0b' : 'currentColor'} />
                     <h4>Super Voluntário</h4>
                     <p>+50 horas no ano</p>
                     <div className="badge-progress">
-                      <div className="badge-bar" style={{ width: '0%' }}></div>
+                      <div className="badge-bar" style={{ width: `${Math.min((totalHours / 50) * 100, 100)}%` }}></div>
                     </div>
                   </div>
+                  
+                  <div className={`badge-card ${totalHours >= 200 ? 'earned' : 'locked'}`}>
+                    <Shield size={36} color={totalHours >= 200 ? '#3b82f6' : 'currentColor'} />
+                    <h4>Veterano</h4>
+                    <p>200 horas voluntariadas</p>
+                    <div className="badge-progress">
+                      <div className="badge-bar" style={{ width: `${Math.min((totalHours / 200) * 100, 100)}%` }}></div>
+                    </div>
+                  </div>
+
                   <div className="badge-card locked">
                     <Flame size={36} />
                     <h4>Maratonista</h4>
@@ -316,26 +358,11 @@ const VolunteerDashboard = () => {
                       <div className="badge-bar" style={{ width: '0%' }}></div>
                     </div>
                   </div>
+
                   <div className="badge-card locked">
                     <Heart size={36} />
                     <h4>Coração de Ouro</h4>
                     <p>5 avaliações 5 estrelas</p>
-                    <div className="badge-progress">
-                      <div className="badge-bar" style={{ width: '0%' }}></div>
-                    </div>
-                  </div>
-                  <div className="badge-card locked">
-                    <Shield size={36} />
-                    <h4>Veterano</h4>
-                    <p>200 horas voluntariadas</p>
-                    <div className="badge-progress">
-                      <div className="badge-bar" style={{ width: '0%' }}></div>
-                    </div>
-                  </div>
-                  <div className="badge-card locked">
-                    <Users size={36} />
-                    <h4>Mentor</h4>
-                    <p>Indicar 5 amigos</p>
                     <div className="badge-progress">
                       <div className="badge-bar" style={{ width: '0%' }}></div>
                     </div>

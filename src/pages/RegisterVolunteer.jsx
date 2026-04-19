@@ -127,7 +127,7 @@ const RegisterVolunteer = () => {
             disabled={loading}
             style={{ width: '100%', marginTop: '1rem' }}
           >
-            {loading ? 'Carregando...' : t('auth.finishRegVol')}
+            {loading ? t('auth.loading') : t('auth.finishReg')}
           </button>
         </form>
         

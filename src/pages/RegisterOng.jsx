@@ -104,11 +104,11 @@ const RegisterOng = () => {
               onChange={(e) => setFormData({...formData, cause: e.target.value})}
             >
               <option value="">{t('auth.selectCause')}</option>
-              <option value="educacao">Educação</option>
-              <option value="meio-ambiente">Meio Ambiente</option>
-              <option value="saude">Saúde</option>
-              <option value="assistencia">Assistência Social</option>
-              <option value="animais">Proteção Animal</option>
+              <option value="Educação">{t('cause.edu')}</option>
+              <option value="Meio Ambiente">{t('cause.env')}</option>
+              <option value="Saúde">{t('cause.health')}</option>
+              <option value="Assistência Social">{t('cause.social')}</option>
+              <option value="Proteção Animal">{t('cause.animals')}</option>
             </select>
           </div>
           <div className="form-group">
@@ -128,7 +128,7 @@ const RegisterOng = () => {
             disabled={loading}
             style={{ width: '100%', marginTop: '1rem' }}
           >
-            {loading ? 'Carregando...' : t('auth.finishRegOng')}
+            {loading ? t('auth.loading') : t('auth.finishReg')}
           </button>
         </form>
         

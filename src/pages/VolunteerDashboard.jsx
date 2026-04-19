@@ -52,28 +52,44 @@ const VolunteerDashboard = () => {
   const [forumPosts, setForumPosts] = useState([]);
   const [forumInput, setForumInput] = useState('');
 
+  const fetchStats = async () => {
+    if (!profile) return;
+    // Horas confirmadas
+    const { data, error } = await supabase
+      .from('participations')
+      .select(`confirmed_by_ong, jobs (hours_each)`)
+      .eq('volunteer_id', profile.id)
+      .eq('confirmed_by_ong', true);
+    if (!error && data) {
+      const sum = data.reduce((acc, curr) => acc + (curr.jobs?.hours_each || 0), 0);
+      setTotalHours(sum);
+    }
+    // Todas as participações (incluindo não confirmadas)
+    const { data: parts, error: err2 } = await supabase
+      .from('participations')
+      .select('*, jobs(*,profiles(full_name))')
+      .eq('volunteer_id', profile.id);
+    if (!err2 && parts) setMyParticipations(parts);
+  };
+
   // 1. Carregar Horas Confirmadas + Minhas Participações
   useEffect(() => {
-    const fetchStats = async () => {
-      if (!profile) return;
-      // Horas confirmadas
-      const { data, error } = await supabase
-        .from('participations')
-        .select(`confirmed_by_ong, jobs (hours_each)`)
-        .eq('volunteer_id', profile.id)
-        .eq('confirmed_by_ong', true);
-      if (!error && data) {
-        const sum = data.reduce((acc, curr) => acc + (curr.jobs?.hours_each || 0), 0);
-        setTotalHours(sum);
-      }
-      // Todas as participações (incluindo não confirmadas)
-      const { data: parts, error: err2 } = await supabase
-        .from('participations')
-        .select('*, jobs(*,profiles(full_name))')
-        .eq('volunteer_id', profile.id);
-      if (!err2 && parts) setMyParticipations(parts);
-    };
     fetchStats();
+  }, [profile]);
+
+  // 3. Ouvir mudanças nas Participações em tempo real (Status e Horas)
+  useEffect(() => {
+    if (!profile) return;
+    const channel = supabase
+      .channel('my-participations-realtime')
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'participations', filter: `volunteer_id=eq.${profile.id}` }, 
+        () => {
+          fetchStats(); // Atualiza na hora se a ONG confirmar ou se ele se inscrever
+        }
+      )
+      .subscribe();
+    return () => supabase.removeChannel(channel);
   }, [profile]);
 
   // 2. Carregar Vagas Reais do Banco
@@ -295,7 +311,13 @@ const VolunteerDashboard = () => {
                       <p className="vol-vaga-org">{vaga.org}</p>
                       <div className="vol-vaga-footer">
                         <span><MapPin size={14} /> {vaga.location.length > 25 ? vaga.location.substring(0, 25) + '...' : vaga.location}</span>
-                        <button className="btn-primary" style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}>{t('volApp.detailsBtn')}</button>
+                        {myParticipations.some(p => p.job_id === vaga.id) ? (
+                          <span style={{ color: '#10b981', fontWeight: 600, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                             <BookmarkCheck size={16} /> Inscrito
+                          </span>
+                        ) : (
+                          <button className="btn-primary" style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}>{t('volApp.detailsBtn')}</button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -767,29 +789,36 @@ const VolunteerDashboard = () => {
             </div>
             <div className="modal-footer">
               <button className="btn-outline" style={{ flex: 1 }} onClick={() => setSelectedVaga(null)}>Voltar</button>
-              <button 
-                className="btn-primary" 
-                style={{ flex: 2 }}
-                onClick={async () => {
-                  if (!profile) return;
-                  const { error } = await supabase
-                    .from('participations')
-                    .insert([{
-                      volunteer_id: profile.id,
-                      job_id: selectedVaga.id
-                    }]);
-                  if (!error) {
-                    alert('Inscrição confirmada com sucesso! A ONG foi notificada.');
-                    setSelectedVaga(null);
-                  } else if (error.code === '23505') {
-                    alert('Você já está inscrito nesta vaga!');
-                  } else {
-                    alert('Erro ao se inscrever: ' + error.message);
-                  }
-                }}
-              >
-                Quero me candidatar
-              </button>
+              {myParticipations.some(p => p.job_id === selectedVaga.id) ? (
+                <button className="btn-primary" style={{ flex: 2, background: '#10b981', cursor: 'default' }} disabled>
+                  Já Inscrito
+                </button>
+              ) : (
+                <button 
+                  className="btn-primary" 
+                  style={{ flex: 2 }}
+                  onClick={async () => {
+                    if (!profile) return;
+                    const { error } = await supabase
+                      .from('participations')
+                      .insert([{
+                        volunteer_id: profile.id,
+                        job_id: selectedVaga.id
+                      }]);
+                    if (!error) {
+                      alert('Inscrição confirmada com sucesso! A ONG foi notificada.');
+                      setSelectedVaga(null);
+                      fetchStats(); // Força atualização local imediata
+                    } else if (error.code === '23505') {
+                      alert('Você já está inscrito nesta vaga!');
+                    } else {
+                      alert('Erro ao se inscrever: ' + error.message);
+                    }
+                  }}
+                >
+                  Quero me candidatar
+                </button>
+              )}
             </div>
           </div>
         </div>

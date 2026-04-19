@@ -49,25 +49,41 @@ const OngDashboard = () => {
   const [myRoles, setMyRoles] = useState([]);
   const [volunteersList, setVolunteersList] = useState([]);
 
+  const fetchMyJobs = async () => {
+    if (!profile) return;
+    const { data, error } = await supabase
+      .from('jobs')
+      .select('*')
+      .eq('ong_id', profile.id)
+      .order('created_at', { ascending: false });
+    if (!error) setMyRoles(data || []);
+    // Carregar voluntários inscritos nas vagas dessa ONG
+    const { data: partsData } = await supabase
+      .from('participations')
+      .select('*, jobs!inner(*), profiles:volunteer_id(full_name, id)')
+      .eq('jobs.ong_id', profile.id);
+    
+    if (partsData) setVolunteersList(partsData);
+  };
+
   // Carregar vagas reais da ONG logada
   useEffect(() => {
-    const fetchMyJobs = async () => {
-      if (!profile) return;
-      const { data, error } = await supabase
-        .from('jobs')
-        .select('*')
-        .eq('ong_id', profile.id)
-        .order('created_at', { ascending: false });
-      if (!error) setMyRoles(data || []);
-      // Carregar voluntários inscritos nas vagas dessa ONG
-      const { data: partsData } = await supabase
-        .from('participations')
-        .select('*, jobs!inner(*), profiles:volunteer_id(full_name, id)')
-        .eq('jobs.ong_id', profile.id);
-      
-      if (partsData) setVolunteersList(partsData);
-    };
     fetchMyJobs();
+  }, [profile]);
+
+  // Realtime para a ONG: ouvir novos inscritos e novas vagas
+  useEffect(() => {
+    if (!profile) return;
+    const channel = supabase
+      .channel('ong-dashboard-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'participations' }, () => {
+        fetchMyJobs(); // Atualiza se alguém se inscrever ou desinscrever
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'jobs', filter: `ong_id=eq.${profile.id}` }, () => {
+        fetchMyJobs(); // Atualiza se uma vaga for criada ou editada
+      })
+      .subscribe();
+    return () => supabase.removeChannel(channel);
   }, [profile]);
 
   const confirmPresence = async (participationId) => {

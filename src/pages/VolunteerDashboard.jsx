@@ -66,68 +66,7 @@ const VolunteerDashboard = () => {
     setSavedVagas(prev => prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]);
   };
 
-  const allVagas = [
-    { 
-      id: 1, 
-      title: 'Professor de Reforço Escolar', 
-      org: 'Educa Jovem', 
-      location: 'Rua das Flores, 123, São Paulo, SP', 
-      category: 'Educação', 
-      modality: 'Presencial', 
-      duration: 'Longa', 
-      urgent: false, 
-      image: '/volunteer_education_1776454318563.png',
-      description: 'Ajude crianças do ensino fundamental com dificuldades em matemática e português. O projeto visa reduzir a evasão escolar e fortalecer a base educacional da comunidade.',
-      date: '20260425T140000Z',
-      endDate: '20260425T170000Z',
-      fullDate: 'Sábado, 25 de Abril — 14h às 17h'
-    },
-    { 
-      id: 2, 
-      title: 'Cuidador de Animais Resgatados', 
-      org: 'Patas Amigas', 
-      location: 'Av. Paulista, 1000, São Paulo, SP', 
-      category: 'Animais', 
-      modality: 'Presencial', 
-      duration: 'Curta', 
-      urgent: true, 
-      image: '/volunteer_health_1776454343716.png',
-      description: 'Nossa ONG precisa de ajuda para cuidar dos animais resgatados. Você irá alimentar, dar banho e passear com os cães e gatos que aguardam por um novo lar.',
-      date: '20260420T090000Z',
-      endDate: '20260420T120000Z',
-      fullDate: 'Segunda-feira, 20 de Abril — 09h às 12h'
-    },
-    { 
-      id: 3, 
-      title: 'Plantio de Árvores no Parque', 
-      org: 'Verde Viver', 
-      location: 'Parque Barigui, Curitiba, PR', 
-      category: 'Meio Ambiente', 
-      modality: 'Presencial', 
-      duration: 'Curta', 
-      urgent: false, 
-      image: '/volunteer_environment_1776454330833.png',
-      description: 'Participe do nosso mutirão mensal de plantio de árvores nativas. É uma ótima oportunidade de contato com a natureza e de fazer algo prático pelo planeta.',
-      date: '20260510T080000Z',
-      endDate: '20260510T110000Z',
-      fullDate: 'Domingo, 10 de Maio — 08h às 11h'
-    },
-    { 
-      id: 4, 
-      title: 'Designer para Campanha Social', 
-      org: 'Instituto Sol', 
-      location: 'Remoto (Plataforma Próximo Amor)', 
-      category: 'Comunicação', 
-      modality: 'Remoto', 
-      duration: 'Curta', 
-      urgent: true, 
-      image: '/volunteer_education_1776454318563.png',
-      description: 'Estamos reformulando nossa identidade visual e precisamos de um designer para criar os posts de uma campanha de arrecadação de alimentos.',
-      date: '20260415T100000Z',
-      endDate: '20260430T180000Z',
-      fullDate: 'Início: 15 de Abril (Flexível)'
-    },
-  ];
+  const allVagas = [];
 
   const filteredVagas = allVagas.filter(v => {
     if (activeFilter === 'remotas') return v.modality === 'Remoto';
@@ -273,78 +212,32 @@ const VolunteerDashboard = () => {
             <div className="fade-in">
               {/* Profile Header */}
               <div className="vol-profile-header">
-                <div className="vol-avatar-big">LM</div>
+                <div className="vol-avatar-big">{profile?.full_name?.substring(0, 2).toUpperCase() || 'V'}</div>
                 <div className="vol-profile-info">
-                  <h2>Lucas Martins</h2>
-                  <p>Design, Comunicação, Tecnologia</p>
+                  <h2>{profile?.full_name || 'Voluntário'}</h2>
+                  <p>{profile?.skills || 'Adicione suas habilidades nas configurações'}</p>
                 </div>
                 <div className="vol-hours-counter">
-                  <span className="hours-number">127</span>
+                  <span className="hours-number">0</span>
                   <span className="hours-label">{t('volProf.donatedHours')}</span>
-                </div>
-              </div>
-
-              {/* Skills Tree */}
-              <div className="dash-panel" style={{ marginBottom: '1.5rem' }}>
-                <h3 className="panel-title">🌳 Árvore de Competências</h3>
-                <div className="skills-tree">
-                  <span className="skill-tag gold"><Sparkles size={14} /> Mestre em Design</span>
-                  <span className="skill-tag blue"><Star size={14} /> Líder de Equipe</span>
-                  <span className="skill-tag green"><Shield size={14} /> Comunicador</span>
-                  <span className="skill-tag gray">Iniciante em Jurídico</span>
-                  <span className="skill-tag gray">Iniciante em Cozinha</span>
                 </div>
               </div>
 
               {/* History Timeline */}
               <div className="dash-panel" style={{ marginBottom: '1.5rem' }}>
                 <h3 className="panel-title">{t('volProf.history')}</h3>
-                <div className="vol-timeline">
-                  <div className="timeline-item">
-                    <div className="timeline-dot active"></div>
-                    <div className="timeline-content">
-                      <h4>Educa Jovem</h4>
-                      <p>Professor de Reforço — 48h voluntariadas</p>
-                      <span className="timeline-date">Jan 2025 — Mar 2025</span>
-                    </div>
-                  </div>
-                  <div className="timeline-item">
-                    <div className="timeline-dot"></div>
-                    <div className="timeline-content">
-                      <h4>Verde Viver</h4>
-                      <p>Mutirão de Plantio — 32h voluntariadas</p>
-                      <span className="timeline-date">Out 2024 — Dez 2024</span>
-                    </div>
-                  </div>
-                  <div className="timeline-item">
-                    <div className="timeline-dot"></div>
-                    <div className="timeline-content">
-                      <h4>Instituto Sol</h4>
-                      <p>Designer Social — 47h voluntariadas</p>
-                      <span className="timeline-date">Jun 2024 — Set 2024</span>
-                    </div>
-                  </div>
+                <div className="empty-state" style={{ padding: '2rem' }}>
+                  <Clock size={36} color="#cbd5e1" />
+                  <p>Você ainda não participou de nenhuma ação voluntária. Explore as oportunidades na aba Descobrir!</p>
                 </div>
               </div>
 
               {/* Testimonials */}
               <div className="dash-panel">
                 <h3 className="panel-title">{t('volProf.testimonials')}</h3>
-                <div className="vol-testimonials">
-                  <div className="testimonial-card">
-                    <p>"Lucas foi essencial na nossa campanha. Criou materiais incríveis e sempre esteve disponível!"</p>
-                    <div className="testimonial-author">
-                      <div className="org-avatar">IS</div>
-                      <span><strong>Instituto Sol</strong> — Coordenação</span>
-                    </div>
-                  </div>
-                  <div className="testimonial-card">
-                    <p>"Um voluntário exemplar. Dedicado, pontual e com uma energia contagiante."</p>
-                    <div className="testimonial-author">
-                      <div className="org-avatar" style={{ background: '#10b981' }}>EJ</div>
-                      <span><strong>Educa Jovem</strong> — Direção</span>
-                    </div>
-                  </div>
+                <div className="empty-state" style={{ padding: '2rem' }}>
+                  <Star size={36} color="#cbd5e1" />
+                  <p>Nenhuma avaliação recebida ainda. As ONGs poderão te avaliar após suas participações.</p>
                 </div>
               </div>
             </div>
@@ -364,31 +257,40 @@ const VolunteerDashboard = () => {
                 </div>
               </div>
 
-              {/* Badges */}
+              {/* Badges - All Locked for new user */}
               <div className="dash-panel" style={{ marginBottom: '1.5rem' }}>
                 <h3 className="panel-title">{t('volAchieve.badges')}</h3>
                 <div className="badges-grid">
-                  <div className="badge-card earned">
-                    <Award size={36} color="#f59e0b" />
+                  <div className="badge-card locked">
+                    <Award size={36} />
                     <h4>Super Voluntário</h4>
                     <p>+50 horas no ano</p>
+                    <div className="badge-progress">
+                      <div className="badge-bar" style={{ width: '0%' }}></div>
+                    </div>
                   </div>
-                  <div className="badge-card earned">
-                    <Flame size={36} color="#ef4444" />
+                  <div className="badge-card locked">
+                    <Flame size={36} />
                     <h4>Maratonista</h4>
                     <p>3 projetos seguidos</p>
+                    <div className="badge-progress">
+                      <div className="badge-bar" style={{ width: '0%' }}></div>
+                    </div>
                   </div>
-                  <div className="badge-card earned">
-                    <Heart size={36} color="#ec4899" />
+                  <div className="badge-card locked">
+                    <Heart size={36} />
                     <h4>Coração de Ouro</h4>
                     <p>5 avaliações 5 estrelas</p>
+                    <div className="badge-progress">
+                      <div className="badge-bar" style={{ width: '0%' }}></div>
+                    </div>
                   </div>
                   <div className="badge-card locked">
                     <Shield size={36} />
                     <h4>Veterano</h4>
-                    <p>200 horas (faltam 73h)</p>
+                    <p>200 horas voluntariadas</p>
                     <div className="badge-progress">
-                      <div className="badge-bar" style={{ width: '63%' }}></div>
+                      <div className="badge-bar" style={{ width: '0%' }}></div>
                     </div>
                   </div>
                   <div className="badge-card locked">
@@ -396,7 +298,7 @@ const VolunteerDashboard = () => {
                     <h4>Mentor</h4>
                     <p>Indicar 5 amigos</p>
                     <div className="badge-progress">
-                      <div className="badge-bar" style={{ width: '40%' }}></div>
+                      <div className="badge-bar" style={{ width: '0%' }}></div>
                     </div>
                   </div>
                 </div>
@@ -405,24 +307,10 @@ const VolunteerDashboard = () => {
               {/* Saved Vagas / Wishlist */}
               <div className="dash-panel">
                 <h3 className="panel-title">{t('volAchieve.wishlist')}</h3>
-                {savedVagas.length === 0 ? (
-                  <div className="empty-state" style={{ padding: '2rem' }}>
-                    <Bookmark size={36} color="#cbd5e1" />
-                    <p>{t('volAchieve.emptyWishlist')}</p>
-                  </div>
-                ) : (
-                  <ul className="wishlist">
-                    {allVagas.filter(v => savedVagas.includes(v.id)).map(v => (
-                      <li key={v.id} className="wishlist-item" onClick={() => setSelectedVaga(v)}>
-                        <div>
-                          <strong>{v.title}</strong>
-                          <span className="wishlist-org">{v.org} — {v.location.substring(0, 30)}...</span>
-                        </div>
-                        <button className="btn-primary" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }}>Detalhes</button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <div className="empty-state" style={{ padding: '2rem' }}>
+                  <Bookmark size={36} color="#cbd5e1" />
+                  <p>{t('volAchieve.emptyWishlist')}</p>
+                </div>
               </div>
             </div>
           )}
@@ -433,31 +321,9 @@ const VolunteerDashboard = () => {
               {/* Forum */}
               <div className="dash-panel" style={{ marginBottom: '1.5rem' }}>
                 <h3 className="panel-title">{t('volComm.forum')}</h3>
-                <div className="forum-list">
-                  <div className="forum-post">
-                    <div className="forum-avatar">MS</div>
-                    <div className="forum-body">
-                      <h4>Como foi minha experiência na ONG Verde Viver</h4>
-                      <p>Gente, participei do mutirão no sábado e foi incrível! Plantamos mais de 200 mudas...</p>
-                      <div className="forum-meta">
-                        <span>Mariana Santos</span>
-                        <span>• 2 horas atrás</span>
-                        <span>• 14 respostas</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="forum-post">
-                    <div className="forum-avatar" style={{ background: '#8b5cf6' }}>RP</div>
-                    <div className="forum-body">
-                      <h4>Dicas para quem está começando no voluntariado remoto</h4>
-                      <p>Fiz uma lista com 5 coisas que eu gostaria de saber antes de começar como voluntário online...</p>
-                      <div className="forum-meta">
-                        <span>Rafael Pereira</span>
-                        <span>• 1 dia atrás</span>
-                        <span>• 28 respostas</span>
-                      </div>
-                    </div>
-                  </div>
+                <div className="empty-state" style={{ padding: '2rem' }}>
+                  <MessageCircle size={36} color="#cbd5e1" />
+                  <p>{t('volComm.emptyForum')}</p>
                 </div>
               </div>
 

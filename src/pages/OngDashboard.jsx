@@ -47,6 +47,7 @@ const OngDashboard = () => {
   const [newJobHours, setNewJobHours] = useState('4');
 
   const [myRoles, setMyRoles] = useState([]);
+  const [volunteersList, setVolunteersList] = useState([]);
 
   // Carregar vagas reais da ONG logada
   useEffect(() => {
@@ -58,9 +59,32 @@ const OngDashboard = () => {
         .eq('ong_id', profile.id)
         .order('created_at', { ascending: false });
       if (!error) setMyRoles(data || []);
+      // Carregar voluntários inscritos nas vagas dessa ONG
+      const { data: partsData } = await supabase
+        .from('participations')
+        .select('*, jobs!inner(*), profiles:volunteer_id(full_name, id)')
+        .eq('jobs.ong_id', profile.id);
+      
+      if (partsData) setVolunteersList(partsData);
     };
     fetchMyJobs();
   }, [profile]);
+
+  const confirmPresence = async (participationId) => {
+    const { error } = await supabase
+      .from('participations')
+      .update({ confirmed_by_ong: true })
+      .eq('id', participationId);
+    
+    if (!error) {
+      setVolunteersList(prev => prev.map(p => 
+        p.id === participationId ? { ...p, confirmed_by_ong: true } : p
+      ));
+      alert("Presença confirmada! As horas foram creditadas ao voluntário.");
+    } else {
+      alert("Erro ao confirmar presença.");
+    }
+  };
 
   const handleLocationBlur = async (e) => {
     const cepOnlyNumbers = e.target.value.replace(/\D/g, '');
@@ -253,13 +277,44 @@ const OngDashboard = () => {
               </div>
 
               <div className="project-cards-list">
-                {myRoles.length === 0 ? (
+                {volunteersList.length === 0 ? (
                   <div className="empty-state" style={{ padding: '2rem' }}>
                     <Users size={36} color="#cbd5e1" />
                     <p>Nenhum voluntário inscrito ainda. Crie vagas para começar a receber candidaturas.</p>
                   </div>
                 ) : (
-                  <p style={{ color: 'var(--text-gray)', padding: '1rem' }}>Os voluntários inscritos nas suas vagas aparecerão aqui.</p>
+                  <table className="volunteers-table" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '1rem', background: 'white', borderRadius: '12px', overflow: 'hidden' }}>
+                    <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                      <tr>
+                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#64748b' }}>Vaga</th>
+                        <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600', color: '#64748b' }}>Voluntário</th>
+                        <th style={{ padding: '1rem', textAlign: 'center', fontWeight: '600', color: '#64748b' }}>Status</th>
+                        <th style={{ padding: '1rem', textAlign: 'center', fontWeight: '600', color: '#64748b' }}>Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {volunteersList.map((vol) => (
+                        <tr key={vol.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                          <td style={{ padding: '1rem', fontWeight: '500' }}>{vol.jobs?.title}</td>
+                          <td style={{ padding: '1rem', color: '#475569' }}>{vol.profiles?.full_name}</td>
+                          <td style={{ padding: '1rem', textAlign: 'center' }}>
+                            <span className={`status-badge`} style={{ background: vol.confirmed_by_ong ? '#d1fae5' : '#fef3c7', color: vol.confirmed_by_ong ? '#065f46' : '#92400e', padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.85rem' }}>
+                              {vol.confirmed_by_ong ? 'Confirmado' : 'Pendente'}
+                            </span>
+                          </td>
+                          <td style={{ padding: '1rem', textAlign: 'center' }}>
+                            {!vol.confirmed_by_ong ? (
+                              <button className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }} onClick={() => confirmPresence(vol.id)}>
+                                Confirmar Presença
+                              </button>
+                            ) : (
+                              <span style={{ color: '#10b981', fontWeight: '500' }}>Horas creditadas</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 )}
               </div>
             </div>

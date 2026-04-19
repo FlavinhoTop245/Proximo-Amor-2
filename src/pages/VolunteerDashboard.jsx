@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Compass,
+  Briefcase,
   User,
   Trophy,
   BookOpen,
@@ -39,29 +40,38 @@ const VolunteerDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('descobrir');
   const [activeFilter, setActiveFilter] = useState('todos');
-  const [savedVagas, setSavedVagas] = useState([]);
+  const [savedVagas, setSavedVagas] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('savedVagas') || '[]'); } catch { return []; }
+  });
   const [selectedVaga, setSelectedVaga] = useState(null);
   const [allVagas, setAllVagas] = useState([]); // Vagas do banco
+  const [myParticipations, setMyParticipations] = useState([]);
   const [totalHours, setTotalHours] = useState(0); // Horas reais confirmadas
   const [isDarkMode, setIsDarkMode] = useState(() => document.body.classList.contains('dark-theme'));
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [forumPosts, setForumPosts] = useState([]);
   const [forumInput, setForumInput] = useState('');
 
-  // 1. Carregar Horas Confirmadas do Voluntário
+  // 1. Carregar Horas Confirmadas + Minhas Participações
   useEffect(() => {
     const fetchStats = async () => {
       if (!profile) return;
+      // Horas confirmadas
       const { data, error } = await supabase
         .from('participations')
         .select(`confirmed_by_ong, jobs (hours_each)`)
         .eq('volunteer_id', profile.id)
         .eq('confirmed_by_ong', true);
-      
       if (!error && data) {
         const sum = data.reduce((acc, curr) => acc + (curr.jobs?.hours_each || 0), 0);
         setTotalHours(sum);
       }
+      // Todas as participações (incluindo não confirmadas)
+      const { data: parts, error: err2 } = await supabase
+        .from('participations')
+        .select('*, jobs(*,profiles(full_name))')
+        .eq('volunteer_id', profile.id);
+      if (!err2 && parts) setMyParticipations(parts);
     };
     fetchStats();
   }, [profile]);
@@ -156,7 +166,11 @@ const VolunteerDashboard = () => {
 
   const toggleSave = (e, id) => {
     e.stopPropagation();
-    setSavedVagas(prev => prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]);
+    setSavedVagas(prev => {
+      const next = prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id];
+      localStorage.setItem('savedVagas', JSON.stringify(next));
+      return next;
+    });
   };
     const filteredVagas = allVagas.filter(v => {
     if (activeFilter === 'remotas') return v.modality === 'Remoto';
@@ -183,6 +197,10 @@ const VolunteerDashboard = () => {
           <button className={`vol-nav-item ${activeTab === 'conquistas' ? 'active' : ''}`} onClick={() => setActiveTab('conquistas')}>
             <Trophy size={22} />
             <span>{t('nav.achievements')}</span>
+          </button>
+          <button className={`vol-nav-item ${activeTab === 'minhasvagas' ? 'active' : ''}`} onClick={() => setActiveTab('minhasvagas')}>
+            <Briefcase size={22} />
+            <span>Minhas Vagas</span>
           </button>
           <button className={`vol-nav-item ${activeTab === 'comunidade' ? 'active' : ''}`} onClick={() => setActiveTab('comunidade')}>
             <BookOpen size={22} />
@@ -213,6 +231,7 @@ const VolunteerDashboard = () => {
             {activeTab === 'descobrir' && t('volApp.discoverTitle')}
             {activeTab === 'perfil' && t('nav.profile')}
             {activeTab === 'conquistas' && t('volApp.achievementsTitle')}
+            {activeTab === 'minhasvagas' && 'Minhas Vagas'}
             {activeTab === 'comunidade' && t('volApp.communityTitle')}
             {activeTab === 'mensagens' && (t('nav.messages') || 'Mensagens')}
             {activeTab === 'configuracoes' && t('nav.settings')}
@@ -294,6 +313,57 @@ const VolunteerDashboard = () => {
                   <button className="btn-primary" style={{ padding: '0.5rem 1.5rem' }}>Ativar Localização</button>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* ===================== MINHAS VAGAS ===================== */}
+          {activeTab === 'minhasvagas' && (
+            <div className="fade-in">
+              {myParticipations.length === 0 ? (
+                <div className="empty-state" style={{ padding: '3rem' }}>
+                  <Briefcase size={48} color="#cbd5e1" />
+                  <h3 style={{ marginTop: '1rem', color: 'var(--text-dark)' }}>Nenhuma inscrição ainda</h3>
+                  <p>Explore vagas na aba Descobrir e candidate-se!</p>
+                  <button className="btn-primary" style={{ marginTop: '1rem' }} onClick={() => setActiveTab('descobrir')}>Ir para Descobrir</button>
+                </div>
+              ) : (
+                <div className="vol-vagas-grid">
+                  {myParticipations.map(p => {
+                    const job = p.jobs;
+                    if (!job) return null;
+                    let fullDate = 'Data a confirmar';
+                    if (job.date) {
+                      try {
+                        const d = new Date(job.date + 'T00:00:00');
+                        fullDate = d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+                        if (job.time) fullDate += ` — ${job.time}`;
+                      } catch(e) {}
+                    }
+                    return (
+                      <div key={p.id} className="vol-vaga-card" style={{ cursor: 'default' }}>
+                        <div className="vol-vaga-img">
+                          <img src={`https://picsum.photos/seed/${job.id}/400/200`} alt={job.title} />
+                          <span className={`urgent-badge`} style={{ background: p.confirmed_by_ong ? '#10b981' : '#f59e0b' }}>
+                            {p.confirmed_by_ong ? '✅ Confirmado' : '⏳ Pendente'}
+                          </span>
+                        </div>
+                        <div className="vol-vaga-body">
+                          <div className="vol-vaga-tags">
+                            <span className="tag blue">{job.category}</span>
+                            <span className="tag gray">{job.hours_each}h</span>
+                          </div>
+                          <h3>{job.title}</h3>
+                          <p className="vol-vaga-org">{job.profiles?.full_name || 'ONG'}</p>
+                          <div className="vol-vaga-footer">
+                            <span><Calendar size={14} /> {fullDate}</span>
+                            <span><MapPin size={14} /> {job.location || 'Remoto'}</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
@@ -617,6 +687,10 @@ const VolunteerDashboard = () => {
         <button className={`vol-bottom-nav-item ${activeTab === 'conquistas' ? 'active' : ''}`} onClick={() => setActiveTab('conquistas')}>
           <Trophy size={24} />
           <span>Metas</span>
+        </button>
+        <button className={`vol-bottom-nav-item ${activeTab === 'minhasvagas' ? 'active' : ''}`} onClick={() => setActiveTab('minhasvagas')}>
+          <Briefcase size={24} />
+          <span>Vagas</span>
         </button>
         <button className={`vol-bottom-nav-item ${activeTab === 'comunidade' ? 'active' : ''}`} onClick={() => setActiveTab('comunidade')}>
           <BookOpen size={24} />

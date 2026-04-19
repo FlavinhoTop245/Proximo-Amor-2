@@ -27,18 +27,27 @@ import {
   ExternalLink,
   X
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getMapsUrl, getCalendarUrl } from '../utils';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 import ChatMessenger from '../components/ChatMessenger';
 
 const VolunteerDashboard = () => {
+  const { profile, loading, signOut } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('descobrir');
   const [activeFilter, setActiveFilter] = useState('todos');
   const [savedVagas, setSavedVagas] = useState([]);
   const [selectedVaga, setSelectedVaga] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(() => document.body.classList.contains('dark-theme'));
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/');
+  };
+
   
   const { language, setLanguage, t } = useLanguage();
 
@@ -160,10 +169,10 @@ const VolunteerDashboard = () => {
           <button className={`vol-icon-btn ${activeTab === 'configuracoes' ? 'active' : ''}`} onClick={() => setActiveTab('configuracoes')} title="Configurações">
             <Settings size={20} />
           </button>
-          <Link to="/" className="vol-icon-btn"><LogOut size={20} /></Link>
+          <button onClick={handleLogout} className="vol-icon-btn" title="Sair"><LogOut size={20} /></button>
           <button className={`vol-profile-btn ${activeTab === 'perfil' ? 'active' : ''}`} onClick={() => setActiveTab('perfil')}>
-            <div className="vol-avatar-sm">LM</div>
-            <span className="vol-profile-name">Lucas</span>
+            <div className="vol-avatar-sm">{profile?.full_name?.substring(0, 2).toUpperCase() || 'V'}</div>
+            <span className="vol-profile-name">{profile?.full_name?.split(' ')[0] || 'Voluntário'}</span>
           </button>
         </div>
       </nav>

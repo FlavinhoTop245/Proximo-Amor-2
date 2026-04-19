@@ -16,15 +16,23 @@ import {
   ExternalLink,
   X
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getMapsUrl, getCalendarUrl } from '../utils';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 import ChatMessenger from '../components/ChatMessenger';
 
 const OngDashboard = () => {
+  const { profile, signOut } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('geral');
   const [isDarkMode, setIsDarkMode] = useState(() => document.body.classList.contains('dark-theme'));
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   // Estados para Criação de Vagas
   const [isCreatingJob, setIsCreatingJob] = useState(false);
@@ -128,7 +136,7 @@ const OngDashboard = () => {
       {/* Sidebar */}
       <aside className="dashboard-sidebar">
         <div className="sidebar-header">
-          <h2>Instituto Acolher</h2>
+          <h2>{profile?.full_name || 'Minha ONG'}</h2>
           <p>Painel da ONG</p>
         </div>
         <nav className="sidebar-nav">
@@ -152,7 +160,9 @@ const OngDashboard = () => {
           <button className={`nav-btn ${activeTab === 'configuracoes' ? 'active' : ''}`} onClick={() => setActiveTab('configuracoes')}>
             <Settings size={20} /> {t('nav.settings')}
           </button>
-          <Link to="/" className="nav-btn text-danger"><LogOut size={20} /> Sair</Link>
+          <button onClick={handleLogout} className="nav-btn text-danger" style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left' }}>
+            <LogOut size={20} /> Sair
+          </button>
         </div>
       </aside>
 
@@ -172,7 +182,7 @@ const OngDashboard = () => {
               <Search size={18} />
               <input type="text" placeholder="Buscar no painel..." />
             </div>
-            <div className="user-avatar">IA</div>
+            <div className="user-avatar">{profile?.full_name?.substring(0, 2).toUpperCase() || 'IA'}</div>
           </div>
         </header>
 

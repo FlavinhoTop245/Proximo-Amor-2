@@ -1,108 +1,95 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Search, Phone, Video, MoreVertical, Paperclip } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-
-const MOCK_DATA = {
-  ong: [
-    {
-      id: 1,
-      name: 'Lucas (Voluntário)',
-      avatar: 'LM',
-      status: 'Online',
-      messages: [
-        { id: 1, text: 'Olá! Gostaria de saber mais sobre a vaga de reforço escolar.', sender: 'them', time: '10:00' },
-        { id: 2, text: 'Claro Lucas! O que você gostaria de saber? O horário é flexível.', sender: 'me', time: '10:05' }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Maria Clara',
-      avatar: 'MC',
-      status: 'Visto por último hoje',
-      messages: [
-        { id: 1, text: 'Enviei meu currículo, aguardo retorno!', sender: 'them', time: 'Ontem' }
-      ]
-    }
-  ],
-  volunteer: [
-    {
-      id: 1,
-      name: 'Instituto Acolher',
-      avatar: 'IA',
-      status: 'Online',
-      messages: [
-        { id: 1, text: 'Olá! Vimos seu currículo do bem.', sender: 'them', time: '09:00' },
-        { id: 2, text: 'Que ótimo! Estou à disposição para ajudar.', sender: 'me', time: '09:30' }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Patas Amigas',
-      avatar: 'PA',
-      status: 'Online',
-      messages: [
-        { id: 1, text: 'Temos uma vaga urgente para este sábado.', sender: 'them', time: 'Terça' }
-      ]
-    }
-  ]
-};
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../supabase';
 
 const ChatMessenger = ({ userType = 'volunteer' }) => {
-  const [contacts, setContacts] = useState(MOCK_DATA[userType]);
-  const [activeChatId, setActiveChatId] = useState(contacts[0].id);
+  const { profile } = useAuth();
+  const [contacts, setContacts] = useState([]);
+  const [activeChatId, setActiveChatId] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const historyRef = useRef(null);
   const { t } = useLanguage();
 
-  const activeChat = contacts.find(c => c.id === activeChatId);
+  // 1. Carregar contatos (busca perfis que não são o meu)
+  useEffect(() => {
+    const fetchContacts = async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .neq('id', profile?.id) // Não listar a si mesmo
+        .eq('role', userType === 'volunteer' ? 'ong' : 'voluntario'); // Se sou vol, busco ongs
+
+      if (!error) setContacts(data);
+    };
+
+    if (profile) fetchContacts();
+  }, [profile, userType]);
+
+  // 2. Carregar mensagens quando um chat é selecionado
+  useEffect(() => {
+    if (!activeChatId || !profile) return;
+
+    const fetchMessages = async () => {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .or(`and(sender_id.eq.${profile.id},receiver_id.eq.${activeChatId}),and(sender_id.eq.${activeChatId},receiver_id.eq.${profile.id})`)
+        .order('created_at', { ascending: true });
+
+      if (!error) setMessages(data);
+    };
+
+    fetchMessages();
+
+    // 3. REALTIME: Escutar novas mensagens ao vivo
+    const subscription = supabase
+      .channel('messages')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
+        const newMessage = payload.new;
+        if (
+          (newMessage.sender_id === profile.id && newMessage.receiver_id === activeChatId) ||
+          (newMessage.sender_id === activeChatId && newMessage.receiver_id === profile.id)
+        ) {
+          setMessages((prev) => [...prev, newMessage]);
+        }
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+  }, [activeChatId, profile]);
 
   // Auto-scroll para a última mensagem
   useEffect(() => {
     if (historyRef.current) {
       historyRef.current.scrollTop = historyRef.current.scrollHeight;
     }
-  }, [activeChat?.messages]);
+  }, [messages]);
 
-  const handleSend = () => {
-    if (!inputText.trim()) return;
+  const handleSend = async () => {
+    if (!inputText.trim() || !activeChatId || !profile) return;
 
-    const newMessage = {
-      id: Date.now(),
-      text: inputText,
-      sender: 'me',
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    const updatedContacts = contacts.map(c => {
-      if (c.id === activeChatId) {
-        return { ...c, messages: [...c.messages, newMessage] };
-      }
-      return c;
-    });
-
-    setContacts(updatedContacts);
-    setInputText('');
-
-    // Simulador de resposta fantasma da outra pessoa
-    setTimeout(() => {
-      const botReply = {
-        id: Date.now() + 1,
-        text: 'Nossa equipe recebeu sua mensagem! Logo responderemos.',
-        sender: 'them',
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      setContacts(prev => prev.map(c => {
-        if (c.id === activeChatId) {
-          return { ...c, messages: [...c.messages, botReply] };
+    const { error } = await supabase
+      .from('messages')
+      .insert([
+        {
+          sender_id: profile.id,
+          receiver_id: activeChatId,
+          content: inputText
         }
-        return c;
-      }));
-    }, 3000);
+      ]);
+
+    if (!error) setInputText('');
   };
+
+  const activeContact = contacts.find(c => c.id === activeChatId);
 
   return (
     <div className="chat-container fade-in">
-      {/* Sidebar de contatos */}
       <div className="chat-sidebar">
         <div className="chat-sidebar-header">
           <h3 style={{ margin: 0, color: 'var(--navy-blue)' }}>{t('chat.title')}</h3>
@@ -118,32 +105,30 @@ const ChatMessenger = ({ userType = 'volunteer' }) => {
               className={`contact-item ${activeChatId === c.id ? 'active' : ''}`}
               onClick={() => setActiveChatId(c.id)}
             >
-              <div className={`contact-avatar ${userType === 'volunteer' ? 'ong' : ''}`}>
-                {c.avatar}
+              <div className={`contact-avatar ${c.role === 'ong' ? 'ong' : ''}`}>
+                {c.full_name?.substring(0, 2).toUpperCase()}
               </div>
               <div className="contact-info">
-                <div className="contact-name">{c.name}</div>
-                <div className="contact-preview">
-                  {c.messages[c.messages.length - 1]?.text}
-                </div>
+                <div className="contact-name">{c.full_name}</div>
+                <div className="contact-preview">Causa: {c.cause || 'Nível: 1'}</div>
               </div>
             </div>
           ))}
+          {contacts.length === 0 && <p style={{ padding: '1rem', color: 'var(--text-gray)', fontSize: '0.9rem' }}>Nenhum contato encontrado.</p>}
         </div>
       </div>
 
-      {/* Janela de Bate-papo Principal */}
       <div className="chat-main">
-        {activeChat ? (
+        {activeContact ? (
           <>
             <div className="chat-header">
               <div className="chat-header-info">
-                <div className={`contact-avatar ${userType === 'volunteer' ? 'ong' : ''}`} style={{ width: 40, height: 40, fontSize: '0.9rem' }}>
-                  {activeChat.avatar}
+                <div className={`contact-avatar ${activeContact.role === 'ong' ? 'ong' : ''}`} style={{ width: 40, height: 40, fontSize: '0.9rem' }}>
+                  {activeContact.full_name?.substring(0, 2).toUpperCase()}
                 </div>
                 <div>
-                  <div style={{ fontWeight: 600, color: 'var(--navy-blue)' }}>{activeChat.name}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-gray)' }}>{activeChat.status}</div>
+                  <div style={{ fontWeight: 600, color: 'var(--navy-blue)' }}>{activeContact.full_name}</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-gray)' }}>Online</div>
                 </div>
               </div>
               <div className="chat-header-actions">
@@ -154,12 +139,12 @@ const ChatMessenger = ({ userType = 'volunteer' }) => {
             </div>
 
             <div className="chat-history" ref={historyRef}>
-              {activeChat.messages.map(msg => (
-                <div key={msg.id} className={`chat-msg-wrapper ${msg.sender}`}>
-                  <div className={`chat-msg ${msg.sender}`}>
-                    {msg.text}
+              {messages.map(msg => (
+                <div key={msg.id} className={`chat-msg-wrapper ${msg.sender_id === profile.id ? 'me' : 'them'}`}>
+                  <div className={`chat-msg ${msg.sender_id === profile.id ? 'me' : 'them'}`}>
+                    {msg.content}
                   </div>
-                  <div className="chat-time">{msg.time}</div>
+                  <div className="chat-time">{new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                 </div>
               ))}
             </div>

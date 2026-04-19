@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Search, Phone, Video, MoreVertical, Paperclip } from 'lucide-react';
+import { Send, Search } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../supabase';
@@ -58,9 +58,10 @@ const ChatMessenger = ({ userType = 'volunteer' }) => {
 
     fetchMessages();
 
-    // 3. REALTIME: Escutar novas mensagens ao vivo
+    // 3. REALTIME: Canal único por par de usuários para evitar conflitos
+    const channelName = `chat-${[profile.id, activeChatId].sort().join('-')}`;
     const subscription = supabase
-      .channel('messages')
+      .channel(channelName)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
         const newMessage = payload.new;
         if (

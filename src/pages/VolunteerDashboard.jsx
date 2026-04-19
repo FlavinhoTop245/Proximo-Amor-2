@@ -31,6 +31,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getMapsUrl, getCalendarUrl } from '../utils';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../supabase';
 import ChatMessenger from '../components/ChatMessenger';
 
 const VolunteerDashboard = () => {
@@ -42,6 +43,8 @@ const VolunteerDashboard = () => {
   const [selectedVaga, setSelectedVaga] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(() => document.body.classList.contains('dark-theme'));
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [forumPosts, setForumPosts] = useState([]);
+  const [forumInput, setForumInput] = useState('');
 
   const handleLogout = async () => {
     await signOut();
@@ -50,6 +53,42 @@ const VolunteerDashboard = () => {
 
   
   const { language, setLanguage, t } = useLanguage();
+
+  // Carregar posts do fórum e ouvir em tempo real
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const { data, error } = await supabase
+        .from('forum_posts')
+        .select('*, profiles(full_name)')
+        .order('created_at', { ascending: false });
+      if (!error) setForumPosts(data || []);
+    };
+    fetchPosts();
+
+    // Realtime: novo post aparece para todos sem atualizar a página
+    const channel = supabase
+      .channel('forum-posts-realtime')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'forum_posts' }, async (payload) => {
+        // Busca o nome do autor do novo post
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', payload.new.user_id)
+          .single();
+        setForumPosts(prev => [{ ...payload.new, profiles: profileData }, ...prev]);
+      })
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, []);
+
+  const handleForumPost = async () => {
+    if (!forumInput.trim() || !profile) return;
+    const { error } = await supabase
+      .from('forum_posts')
+      .insert([{ user_id: profile.id, content: forumInput.trim() }]);
+    if (!error) setForumInput('');
+  };
 
   useEffect(() => {
     if (isDarkMode) {
@@ -321,14 +360,40 @@ const VolunteerDashboard = () => {
               {/* Forum */}
               <div className="dash-panel" style={{ marginBottom: '1.5rem' }}>
                 <h3 className="panel-title">{t('volComm.forum')}</h3>
+                {/* Input de nova postagem */}
                 <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '1.5rem' }}>
-                  <input type="text" placeholder="Compartilhe algo com os outros voluntários..." style={{ flex: 1, padding: '0.8rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--card-bg)', color: 'var(--text-dark)' }} />
-                  <button className="btn-primary" style={{ padding: '0 1.5rem', flexShrink: 0, borderRadius: '8px' }}>Publicar</button>
+                  <input
+                    type="text"
+                    placeholder="Compartilhe algo com os outros voluntários..."
+                    value={forumInput}
+                    onChange={(e) => setForumInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleForumPost()}
+                    style={{ flex: 1, padding: '0.8rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)', outline: 'none', background: 'var(--card-bg)', color: 'var(--text-dark)' }}
+                  />
+                  <button className="btn-primary" onClick={handleForumPost} style={{ padding: '0 1.5rem', flexShrink: 0, borderRadius: '8px' }}>Publicar</button>
                 </div>
-                <div className="empty-state" style={{ padding: '2rem' }}>
-                  <MessageCircle size={36} color="#cbd5e1" />
-                  <p>{t('volComm.emptyForum')}</p>
-                </div>
+                {/* Lista de posts reais do banco */}
+                {forumPosts.length === 0 ? (
+                  <div className="empty-state" style={{ padding: '2rem' }}>
+                    <MessageCircle size={36} color="#cbd5e1" />
+                    <p>{t('volComm.emptyForum')}</p>
+                  </div>
+                ) : (
+                  <div className="forum-list">
+                    {forumPosts.map(post => (
+                      <div key={post.id} className="forum-post">
+                        <div className="forum-avatar">{post.profiles?.full_name?.substring(0, 2).toUpperCase() || 'V'}</div>
+                        <div className="forum-body">
+                          <p style={{ marginBottom: '0.4rem' }}>{post.content}</p>
+                          <div className="forum-meta">
+                            <span>{post.profiles?.full_name || 'Voluntário'}</span>
+                            <span>• {new Date(post.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Learning */}

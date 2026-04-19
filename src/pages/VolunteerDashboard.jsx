@@ -136,10 +136,7 @@ const VolunteerDashboard = () => {
     e.stopPropagation();
     setSavedVagas(prev => prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]);
   };
-
-  const allVagas = [];
-
-  const filteredVagas = allVagas.filter(v => {
+    const filteredVagas = allVagas.filter(v => {
     if (activeFilter === 'remotas') return v.modality === 'Remoto';
     if (activeFilter === 'curtas') return v.duration === 'Curta';
     if (activeFilter === 'urgentes') return v.urgent;

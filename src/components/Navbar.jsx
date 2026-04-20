@@ -33,7 +33,6 @@ const Navbar = () => {
       </Link>
 
       <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-        <Link to="/" style={navItemStyle('/')}>{t('nav.home')}</Link>
         <Link to="/sobre" style={navItemStyle('/sobre')}>{t('nav.about')}</Link>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '1rem', padding: '0.4rem 0.8rem', background: '#f8fafc', borderRadius: '40px', border: '1px solid #e2e8f0' }}>

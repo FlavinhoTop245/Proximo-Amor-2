@@ -21,6 +21,17 @@ const RegisterOng = () => {
     setLoading(true);
 
     try {
+      // 0. Verifica se o e-mail já existe
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('email', formData.email)
+        .maybeSingle();
+
+      if (existingProfile) {
+        throw new Error("Este e-mail já está em uso em nossa plataforma.");
+      }
+
       const { data: { user }, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,

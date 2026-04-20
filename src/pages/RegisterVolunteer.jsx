@@ -25,6 +25,17 @@ const RegisterVolunteer = () => {
 
     setLoading(true);
     try {
+      // 0. Verifica se o e-mail já existe em algum perfil (ONG ou Voluntário)
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('email', formData.email)
+        .maybeSingle();
+
+      if (existingProfile) {
+        throw new Error("Este e-mail já está cadastrado em nossa plataforma.");
+      }
+
       // 1. Cria o usuário no Supabase Auth
       const { data: { user }, error: authError } = await supabase.auth.signUp({
         email: formData.email,

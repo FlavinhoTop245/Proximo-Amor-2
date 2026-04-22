@@ -1,0 +1,191 @@
+/* Estilos Exclusivos para Suporte Mobile (Injetados via script/index.html) */
+
+:root {
+  --mobile-nav-height: 65px;
+}
+
+body.is-mobile {
+  padding-bottom: calc(var(--mobile-nav-height) + env(safe-area-inset-bottom, 15px));
+  overflow-x: hidden;
+}
+
+/* Nova Bottom Navigation Bar */
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--mobile-nav-height);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 9999;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.is-mobile .mobile-bottom-nav {
+  transform: translateY(0);
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  color: var(--text-gray, #64748b);
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  gap: 4px;
+  transition: color 0.2s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-nav-item svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  transition: transform 0.2s ease;
+}
+
+.mobile-nav-item:active svg {
+  transform: scale(0.9);
+}
+
+.mobile-nav-item.active {
+  color: var(--azure-blue, #0066cc);
+}
+
+/* Menu Mobile Overlay (Side Drawer) */
+.mobile-overlay-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(11, 28, 60, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-overlay-menu.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-drawer {
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 80%;
+  max-width: 320px;
+  height: 100%;
+  background: #ffffff;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-overlay-menu.open .mobile-drawer {
+  left: 0;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.drawer-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--navy-blue, #0b1c3c);
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.drawer-link {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--navy-blue, #0b1c3c);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.drawer-link:active {
+  color: var(--azure-blue, #0066cc);
+}
+
+/* Ajustes e Correções no Layout Original para Mobile */
+@media (max-width: 768px) {
+  /* Ocultar a navbar original se estivermos usando a nova injetada (opcional, ajustando as classes se necessário) */
+  .navbar-top .nav-links {
+    display: none !important;
+  }
+  
+  /* Fixar problemas comuns de grid e flexbox no mobile */
+  .grid, .stats-grid, .metrics-grid, .features-grid, .vagas-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  
+  .hero-title {
+    font-size: 2.25rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem !important;
+  }
+  
+  .section-title {
+    font-size: 1.75rem !important;
+  }
+  
+  .card, .stat-card, .metric-card {
+    margin-bottom: 1rem;
+  }
+  
+  /* Garantir que áreas de toque sejam grandes o suficiente */
+  button, a.btn-primary, a.btn-outline, a.view-all {
+    padding: 0.85rem 1.5rem !important;
+    min-height: 44px; /* Recomendação da Apple UI */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Ocultar elementos que não importam tanto em telas menores para focar na UI primária */
+  .desktop-only {
+    display: none !important;
+  }
+}

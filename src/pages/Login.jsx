@@ -2,19 +2,35 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../supabase';
+import Toast from '../components/Toast';
 
 const Login = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState({ message: '', type: 'error' });
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
 
+  const showToast = (message, type = 'error') => setToast({ message, type });
+  const closeToast = () => setToast({ message: '', type: 'error' });
+
+  function traduzirErro(msg) {
+    if (!msg) return 'Ocorreu um erro inesperado. Tente novamente.';
+    const m = msg.toLowerCase();
+    if (m.includes('invalid login credentials') || m.includes('invalid_grant'))
+      return 'E-mail ou senha incorretos. Verifique seus dados.';
+    if (m.includes('network') || m.includes('fetch'))
+      return 'Problema de conexão. Verifique sua internet.';
+    return 'Não foi possível entrar. Tente novamente em instantes.';
+  }
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    closeToast();
 
     try {
       const { data: authData, error } = await supabase.auth.signInWithPassword({
@@ -37,14 +53,16 @@ const Login = () => {
         navigate('/voluntario/dashboard');
       }
     } catch (error) {
-      alert("Erro ao entrar: " + error.message);
+      showToast(traduzirErro(error.message));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="page-container centered-page">
+    <>
+      <Toast message={toast.message} type={toast.type} onClose={closeToast} />
+      <main className="page-container centered-page">
       <div className="auth-box">
         <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '0.5rem' }}>{t('auth.loginTitle')}</h2>
         <p className="section-subtitle" style={{ textAlign: 'center', marginBottom: '2rem' }}>{t('auth.loginSub')}</p>
@@ -94,6 +112,7 @@ const Login = () => {
         </p>
       </div>
     </main>
+    </>
   );
 };
 

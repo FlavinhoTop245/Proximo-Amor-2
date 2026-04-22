@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Building } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../supabase';
+import Toast from '../components/Toast';
 
 const RegisterOng = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState({ message: '', type: 'error' });
   const [formData, setFormData] = useState({
     name: '',
     cnpj: '',
@@ -16,8 +18,24 @@ const RegisterOng = () => {
     password: ''
   });
 
+  const showToast = (message, type = 'error') => setToast({ message, type });
+  const closeToast = () => setToast({ message: '', type: 'error' });
+
+  function traduzirErro(msg) {
+    if (!msg) return 'Ocorreu um erro inesperado. Tente novamente.';
+    const m = msg.toLowerCase();
+    if (m.includes('already exists') || m.includes('unique constraint'))
+      return 'Este e-mail ou CNPJ já está cadastrado.';
+    if (m.includes('password') && m.includes('short'))
+      return 'A senha deve ter pelo menos 6 caracteres.';
+    if (m.includes('network') || m.includes('fetch'))
+      return 'Erro de conexão. Verifique sua internet.';
+    return 'Não foi possível cadastrar a ONG. Verifique os dados.';
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    closeToast();
     setLoading(true);
 
     try {
@@ -52,17 +70,19 @@ const RegisterOng = () => {
 
       if (profileError) throw profileError;
 
-      alert("Cadastro de ONG realizado com sucesso!");
-      navigate('/login');
+      showToast("Cadastro de ONG realizado com sucesso!", "success");
+      setTimeout(() => navigate('/login'), 2000);
     } catch (error) {
-      alert(error.message);
+      showToast(traduzirErro(error.message));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="page-container centered-page">
+    <>
+      <Toast message={toast.message} type={toast.type} onClose={closeToast} />
+      <main className="page-container centered-page">
       <div className="auth-box">
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
           <div className="icon-circle" style={{ width: '64px', height: '64px', marginBottom: '0' }}>
@@ -148,6 +168,7 @@ const RegisterOng = () => {
         </p>
       </div>
     </main>
+    </>
   );
 };
 

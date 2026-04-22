@@ -22,6 +22,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../supabase';
 import ChatMessenger from '../components/ChatMessenger';
+import Toast from '../components/Toast';
 
 const OngDashboard = () => {
   const { profile, signOut } = useAuth();
@@ -29,6 +30,10 @@ const OngDashboard = () => {
   const [activeTab, setActiveTab] = useState('geral');
   const [isDarkMode, setIsDarkMode] = useState(() => document.body.classList.contains('dark-theme'));
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [toast, setToast] = useState({ message: '', type: 'info' });
+
+  const showToast = (message, type = 'info') => setToast({ message, type });
+  const closeToast = () => setToast({ message: '', type: 'info' });
 
   const handleLogout = async () => {
     await signOut();
@@ -144,7 +149,9 @@ const OngDashboard = () => {
   const projects = [];
 
   return (
-    <div className="dashboard-layout">
+    <>
+      <Toast message={toast.message} type={toast.type} onClose={closeToast} />
+      <div className="dashboard-layout">
       {/* Sidebar */}
       <aside className="dashboard-sidebar">
         <div className="sidebar-header">
@@ -612,7 +619,7 @@ const OngDashboard = () => {
                   setNewJobDesc('');
                   setNewJobHours('4');
                   setIsCreatingJob(false);
-                  alert('✅ Vaga publicada com sucesso! Ela já está visível para os voluntários.');
+                  showToast('Vaga publicada com sucesso!', 'success');
                 }}
               >
                 Publicar Vaga
@@ -621,7 +628,7 @@ const OngDashboard = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

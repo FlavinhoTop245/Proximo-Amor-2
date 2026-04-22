@@ -27,12 +27,12 @@ jobs:
       - name: Build
         run: npm run build
         
-      - name: Absolute Deploy to Root
+      - name: Absolute Deploy to Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist
-          branch: main
-          clean: true # Isso vai remover o código-fonte da raiz e deixar apenas o site funcionando
+          branch: gh-pages
+          clean: true
 
 
 

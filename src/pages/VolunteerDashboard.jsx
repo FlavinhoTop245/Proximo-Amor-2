@@ -34,6 +34,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../supabase';
 import ChatMessenger from '../components/ChatMessenger';
+import Toast from '../components/Toast';
 
 const VolunteerDashboard = () => {
   const { profile, loading, signOut } = useAuth();
@@ -51,6 +52,10 @@ const VolunteerDashboard = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [forumPosts, setForumPosts] = useState([]);
   const [forumInput, setForumInput] = useState('');
+  const [toast, setToast] = useState({ message: '', type: 'info' });
+
+  const showToast = (message, type = 'info') => setToast({ message, type });
+  const closeToast = () => setToast({ message: '', type: 'info' });
 
   const fetchStats = async () => {
     if (!profile) return;
@@ -197,7 +202,9 @@ const VolunteerDashboard = () => {
   });
 
   return (
-    <div className="vol-app-layout">
+    <>
+      <Toast message={toast.message} type={toast.type} onClose={closeToast} />
+      <div className="vol-app-layout">
       {/* Top Navigation (Desktop) */}
       <nav className="vol-top-nav">
         <div className="vol-nav-brand">
@@ -806,13 +813,13 @@ const VolunteerDashboard = () => {
                         job_id: selectedVaga.id
                       }]);
                     if (!error) {
-                      alert('Inscrição confirmada com sucesso! A ONG foi notificada.');
+                      showToast('Inscrição confirmada com sucesso! A ONG foi notificada.', 'success');
                       setSelectedVaga(null);
                       fetchStats(); // Força atualização local imediata
                     } else if (error.code === '23505') {
-                      alert('Você já está inscrito nesta vaga!');
+                      showToast('Você já está inscrito nesta vaga!', 'warning');
                     } else {
-                      alert('Erro ao se inscrever: ' + error.message);
+                      showToast('Erro ao se inscrever. Tente novamente.', 'error');
                     }
                   }}
                 >
@@ -823,7 +830,7 @@ const VolunteerDashboard = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

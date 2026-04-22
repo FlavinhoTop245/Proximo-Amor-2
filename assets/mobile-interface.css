@@ -7,27 +7,34 @@
 body.is-mobile {
   padding-bottom: calc(var(--mobile-nav-height) + env(safe-area-inset-bottom, 15px));
   overflow-x: hidden;
+  width: 100vw;
 }
 
-/* Nova Bottom Navigation Bar */
+/* Garantir que nada vaze para fora da tela no mobile */
+.is-mobile * {
+  max-width: 100%;
+  box-sizing: border-box !important;
+}
+
+/* Nova Bottom Navigation Bar com Glassmorphism */
 .mobile-bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   height: var(--mobile-nav-height);
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(15px) saturate(180%);
+  -webkit-backdrop-filter: blur(15px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
   display: flex;
   justify-content: space-around;
   align-items: center;
   z-index: 9999;
-  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
   padding-bottom: env(safe-area-inset-bottom, 0);
   transform: translateY(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body.is-mobile .mobile-bottom-nav {
@@ -41,29 +48,66 @@ body.is-mobile .mobile-bottom-nav {
   justify-content: center;
   flex: 1;
   height: 100%;
-  color: var(--text-gray, #64748b);
+  color: #64748b;
   text-decoration: none;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.7rem;
+  font-weight: 700;
   gap: 4px;
-  transition: color 0.2s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  opacity: 0.7;
 }
 
 .mobile-nav-item svg {
-  width: 24px;
-  height: 24px;
-  fill: currentColor;
-  transition: transform 0.2s ease;
-}
-
-.mobile-nav-item:active svg {
-  transform: scale(0.9);
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.3s ease;
 }
 
 .mobile-nav-item.active {
-  color: var(--azure-blue, #0066cc);
+  color: #0066cc;
+  opacity: 1;
+}
+
+.mobile-nav-item.active svg {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 2px 4px rgba(0, 102, 204, 0.3));
+}
+
+/* Ajustes de Layout para evitar o erro da imagem (conteúdo cortado) */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem !important;
+    padding: 0 1rem;
+    word-wrap: break-word;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.95rem !important;
+    padding: 0 1.5rem;
+  }
+
+  .navbar {
+    padding: 1rem !important;
+  }
+
+  /* Forçar grids a 1 coluna */
+  .grid, .vagas-grid, .features-grid, .stats-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 1rem !important;
+  }
+
+  .card {
+    width: 100% !important;
+    margin-bottom: 1.5rem !important;
+  }
 }
 
 /* Menu Mobile Overlay (Side Drawer) */
@@ -74,8 +118,8 @@ body.is-mobile .mobile-bottom-nav {
   width: 100%;
   height: 100%;
   background: rgba(11, 28, 60, 0.4);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 10000;
   opacity: 0;
   pointer-events: none;
@@ -90,16 +134,16 @@ body.is-mobile .mobile-bottom-nav {
 .mobile-drawer {
   position: absolute;
   top: 0;
-  left: -80%;
-  width: 80%;
-  max-width: 320px;
+  left: -85%;
+  width: 85%;
+  max-width: 300px;
   height: 100%;
   background: #ffffff;
-  box-shadow: 4px 0 20px rgba(0,0,0,0.1);
-  padding: 2rem 1.5rem;
+  box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+  padding: 2.5rem 1.5rem;
   display: flex;
   flex-direction: column;
-  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .mobile-overlay-menu.open .mobile-drawer {
@@ -110,82 +154,40 @@ body.is-mobile .mobile-bottom-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 3rem;
 }
 
 .drawer-close-btn {
-  background: none;
+  background: #f1f5f9;
   border: none;
-  font-size: 1.5rem;
-  color: var(--navy-blue, #0b1c3c);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0b1c3c;
   cursor: pointer;
-  padding: 0.5rem;
 }
 
 .drawer-links {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .drawer-link {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--navy-blue, #0b1c3c);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0b1c3c;
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.5rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  transition: background 0.2s;
 }
 
 .drawer-link:active {
-  color: var(--azure-blue, #0066cc);
+  background: #f1f5f9;
+  color: #0066cc;
 }
 
-/* Ajustes e Correções no Layout Original para Mobile */
-@media (max-width: 768px) {
-  /* Ocultar a navbar original se estivermos usando a nova injetada (opcional, ajustando as classes se necessário) */
-  .navbar-top .nav-links {
-    display: none !important;
-  }
-  
-  /* Fixar problemas comuns de grid e flexbox no mobile */
-  .grid, .stats-grid, .metrics-grid, .features-grid, .vagas-grid {
-    grid-template-columns: 1fr !important;
-    gap: 1.5rem !important;
-  }
-  
-  .hero-title {
-    font-size: 2.25rem !important;
-    line-height: 1.2 !important;
-  }
-  
-  .hero-subtitle {
-    font-size: 1rem !important;
-  }
-  
-  .section-title {
-    font-size: 1.75rem !important;
-  }
-  
-  .card, .stat-card, .metric-card {
-    margin-bottom: 1rem;
-  }
-  
-  /* Garantir que áreas de toque sejam grandes o suficiente */
-  button, a.btn-primary, a.btn-outline, a.view-all {
-    padding: 0.85rem 1.5rem !important;
-    min-height: 44px; /* Recomendação da Apple UI */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  /* Ocultar elementos que não importam tanto em telas menores para focar na UI primária */
-  .desktop-only {
-    display: none !important;
-  }
-}

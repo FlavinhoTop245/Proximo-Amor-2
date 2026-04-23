@@ -23,7 +23,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../supabase';
 import ChatMessenger from '../components/ChatMessenger';
 import Toast from '../components/Toast';
-import Layout from '../components/layout/Layout';
 
 const OngDashboard = () => {
   const { profile, signOut } = useAuth();
@@ -150,7 +149,7 @@ const OngDashboard = () => {
   const projects = [];
 
   return (
-    <Layout>
+    <>
       <Toast message={toast.message} type={toast.type} onClose={closeToast} />
       <div className="dashboard-layout">
       {/* Sidebar */}
@@ -629,8 +628,7 @@ const OngDashboard = () => {
           </div>
         </div>
       )}
-      </div>
-    </Layout>
+    </>
   );
 };
 

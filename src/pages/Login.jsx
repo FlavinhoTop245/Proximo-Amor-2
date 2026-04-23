@@ -1,4 +1,8 @@
-import Layout from '../components/layout/Layout';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
+import { supabase } from '../supabase';
+import Toast from '../components/Toast';
 
 const Login = () => {
   const { t } = useLanguage();
@@ -56,64 +60,59 @@ const Login = () => {
   };
 
   return (
-    <Layout>
+    <>
       <Toast message={toast.message} type={toast.type} onClose={closeToast} />
-      <div className="min-h-[80vh] flex items-center justify-center py-20 bg-bg-main">
-        <div className="bg-white p-12 rounded-[40px] shadow-2xl w-full max-w-lg border border-slate-100 animate-in">
-          <div className="text-center mb-10">
-            <h2 className="text-4xl font-bold text-navy mb-3">{t('auth.loginTitle')}</h2>
-            <p className="text-text-muted">{t('auth.loginSub')}</p>
+      <main className="page-container centered-page">
+      <div className="auth-box">
+        <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '0.5rem' }}>{t('auth.loginTitle')}</h2>
+        <p className="section-subtitle" style={{ textAlign: 'center', marginBottom: '2rem' }}>{t('auth.loginSub')}</p>
+        
+        <form className="auth-form" onSubmit={handleLogin}>
+          <div className="form-group">
+            <label htmlFor="email">{t('auth.email')}</label>
+            <input 
+              type="email" 
+              id="email" 
+              placeholder="seu@email.com" 
+              required 
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+            />
           </div>
-          
-          <form className="flex flex-col gap-6" onSubmit={handleLogin}>
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold text-navy ml-1">{t('auth.email')}</label>
-              <input 
-                type="email" 
-                placeholder="seu@email.com" 
-                className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 outline-none focus:border-primary transition-all text-navy"
-                required 
-                value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold text-navy ml-1">{t('auth.password')}</label>
-              <input 
-                type="password" 
-                placeholder="••••••••" 
-                className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 outline-none focus:border-primary transition-all text-navy"
-                required 
-                value={formData.password}
-                onChange={(e) => setFormData({...formData, password: e.target.value})}
-              />
-            </div>
-            
-            <div className="flex items-center justify-between text-sm px-1">
-              <label className="flex items-center gap-2 cursor-pointer text-text-muted">
-                <input type="checkbox" className="w-4 h-4 rounded border-slate-300 accent-primary" /> 
-                {t('auth.remember')}
-              </label>
-              <a href="#" className="font-bold text-primary hover:underline">{t('auth.forgot')}</a>
-            </div>
-
-            <button 
-              type="submit" 
-              className="btn btn-primary w-full py-4 text-lg mt-4" 
-              disabled={loading}
-            >
-              {loading ? 'Entrando...' : t('auth.enter')}
-            </button>
-          </form>
-          
-          <div className="mt-10 pt-8 border-t border-slate-50 text-center">
-            <p className="text-text-muted">
-              {t('auth.noAccount')} <Link to="/register-options" className="font-bold text-primary hover:underline ml-1">{t('auth.signup')}</Link>
-            </p>
+          <div className="form-group">
+            <label htmlFor="password">{t('auth.password')}</label>
+            <input 
+              type="password" 
+              id="password" 
+              placeholder="••••••••" 
+              required 
+              value={formData.password}
+              onChange={(e) => setFormData({...formData, password: e.target.value})}
+            />
           </div>
-        </div>
+          <div className="form-options">
+            <label className="checkbox-label">
+              <input type="checkbox" /> {t('auth.remember')}
+            </label>
+            <a href="#" className="forgot-password">{t('auth.forgot')}</a>
+          </div>
+          <button 
+            type="submit" 
+            className="btn-primary" 
+            disabled={loading}
+            style={{ width: '100%', marginTop: '1rem' }}
+          >
+            {loading ? 'Carregando...' : t('auth.enter')}
+          </button>
+          
+        </form>
+        
+        <p className="auth-footer">
+          {t('auth.noAccount')} <Link to="/register" className="auth-link">{t('auth.signup')}</Link>
+        </p>
       </div>
-    </Layout>
+    </main>
+    </>
   );
 };
 

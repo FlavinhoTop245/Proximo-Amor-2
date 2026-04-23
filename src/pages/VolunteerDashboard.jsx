@@ -35,7 +35,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../supabase';
 import ChatMessenger from '../components/ChatMessenger';
 import Toast from '../components/Toast';
-import Layout from '../components/layout/Layout';
 
 const VolunteerDashboard = () => {
   const { profile, loading, signOut } = useAuth();
@@ -203,7 +202,8 @@ const VolunteerDashboard = () => {
   });
 
   return (
-    <Layout>
+    <>
+      <Toast message={toast.message} type={toast.type} onClose={closeToast} />
       <div className="vol-app-layout">
       {/* Top Navigation (Desktop) */}
       <nav className="vol-top-nav">
@@ -830,8 +830,7 @@ const VolunteerDashboard = () => {
           </div>
         </div>
       )}
-      </div>
-    </Layout>
+    </>
   );
 };
 

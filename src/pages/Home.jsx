@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Search, MapPin, Calendar, Users, Heart, ArrowRight, Filter } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 
 const Home = () => {
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
 
   const raizesDaSemana = [
@@ -57,10 +59,10 @@ const Home = () => {
 
         <div className="container relative z-10 text-center text-white flex flex-col items-center gap-8">
           <h1 className="text-5xl md:text-7xl font-bold leading-tight max-w-4xl">
-            Somos uma iniciativa dedicada a transformar vidas por meio do voluntariado.
+            {t('search_title')}
           </h1>
           <p className="text-xl md:text-2xl text-white-90 font-medium">
-            Faça parte desse amor hoje!
+            {t('search_subtitle')}
           </p>
 
           {/* Search Box */}
@@ -69,7 +71,7 @@ const Home = () => {
               <Search className="text-text-light mr-4" size={24} />
               <input 
                 type="text" 
-                placeholder="Busque por folhas, galhos, etc..." 
+                placeholder={t('search_placeholder')} 
                 className="flex-1 border-none outline-none py-3 text-lg text-navy placeholder:text-text-light"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -89,11 +91,11 @@ const Home = () => {
             <div className="flex gap-4">
               <button className="btn btn-secondary flex items-center gap-2 px-8 py-3 bg-slate-50 border-none shadow-sm">
                 <ChevronDown size={20} className="mt-1" />
-                Causas
+                {t('search_causes')}
               </button>
               <button className="btn btn-secondary flex items-center gap-2 px-8 py-3 bg-slate-50 border-none shadow-sm">
                 <ChevronDown size={20} className="mt-1" />
-                Áreas
+                {t('search_areas')}
               </button>
             </div>
           </div>
@@ -105,11 +107,11 @@ const Home = () => {
         <div className="container">
           <div className="flex items-end justify-between mb-16">
             <div>
-              <h2 className="text-4xl font-bold text-navy mb-4">Raízes da semana</h2>
-              <p className="text-text-muted text-lg">Veja as oportunidades selecionadas pelo Próximo Amor para esta semana!</p>
+              <h2 className="text-4xl font-bold text-navy mb-4">{t('jobs_title')}</h2>
+              <p className="text-text-muted text-lg">{t('jobs_subtitle')}</p>
             </div>
             <Link to="/vagas" className="btn btn-secondary border-none text-primary font-bold group">
-              Ver todas <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+              {t('jobs_view_all')} <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
             </Link>
           </div>
 

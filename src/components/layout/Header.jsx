@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Heart, Menu, X, ChevronDown } from 'lucide-react';
+import { Heart, Menu, X, ChevronDown, Globe } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const Header = () => {
+  const { t, language, setLanguage } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -16,11 +19,11 @@ const Header = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Enraizar', path: '/' },
-    { name: 'Quem somos', path: '/quem-somos' },
-    { name: 'FAQ', path: '/faq' },
-    { name: 'Quero ser voluntário!', path: '/vagas' },
-    { name: 'Quero encontrar voluntários!', path: '/captar' },
+    { name: t('nav.enraizar'), path: '/' },
+    { name: t('nav.about'), path: '/sobre' },
+    { name: t('nav.faq'), path: '/faq' },
+    { name: t('nav.quero_voluntario'), path: '/vagas' },
+    { name: t('nav.quero_vagas'), path: '/cadastro/ong' },
   ];
 
   return (
@@ -53,11 +56,30 @@ const Header = () => {
 
         {/* Desktop Actions */}
         <div className="hidden lg:flex items-center gap-4">
+          {/* Language Selector */}
+          <div className="relative">
+            <button 
+              onClick={() => setLangMenuOpen(!langMenuOpen)}
+              className="flex items-center gap-2 p-2 rounded-full hover:bg-slate-100 transition-colors"
+            >
+              <Globe size={20} className="text-navy" />
+              <span className="uppercase text-xs font-bold text-navy">{language.split('-')[0]}</span>
+            </button>
+            
+            {langMenuOpen && (
+              <div className="absolute top-full right-0 mt-2 w-32 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                <button onClick={() => { setLanguage('pt-br'); setLangMenuOpen(false); }} className="w-full text-left px-4 py-2 text-sm font-medium hover:bg-slate-50 transition-colors">Português</button>
+                <button onClick={() => { setLanguage('en'); setLangMenuOpen(false); }} className="w-full text-left px-4 py-2 text-sm font-medium hover:bg-slate-50 transition-colors">English</button>
+                <button onClick={() => { setLanguage('es'); setLangMenuOpen(false); }} className="w-full text-left px-4 py-2 text-sm font-medium hover:bg-slate-50 transition-colors">Español</button>
+              </div>
+            )}
+          </div>
+
           <Link to="/login" className="btn btn-secondary border-none bg-transparent hover:bg-slate-100 py-2">
-            Login
+            {t('nav.login')}
           </Link>
           <Link to="/doar" className="btn btn-primary py-2 px-6">
-            Doe agora
+            {t('nav.doe_agora')}
           </Link>
         </div>
 
